@@ -1,0 +1,8 @@
+{
+    "type" : "RadioGroup",
+    "label": "Gender",
+    "content":{ "selected": 0,
+        "radio":[
+        "male", "female", "Prefer Not to say"
+    ]}
+}
