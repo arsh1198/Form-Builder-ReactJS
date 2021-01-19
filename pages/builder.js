@@ -1,69 +1,15 @@
-import {
-  Text,
-  Center,
-  Button,
-  Box,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  VStack,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
-import { useState } from "react";
+import { Box, Flex } from "@chakra-ui/react";
+import BlocksSidebar from "../components/BlocksSidebar";
 
-const Element = ({ type }) => {
-  switch (type) {
-    case "Text":
-      return <Text>Helooo</Text>;
-    case "Input":
-      return <Input> </Input>;
-  }
-};
-
-const Builder = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const elements = [];
-
+export default function Builder() {
   return (
-    <Center>
-      <Box>
-        <Box p={4} mt={125} borderWidth="3px" borderRadius="lg" color>
-          <Button
-            onClick={onOpen}
-            leftIcon={<AddIcon />}
-            colorScheme="teal"
-            variant="outline"
-          >
-            Add Element
-          </Button>
+    <Box>
+      <Flex>
+        <Box h="100vh" bg="lightgrey" flex={1}></Box>
+        <Box boxShadow="lg" borderWidth={3} h="100vh" w="18rem">
+          <BlocksSidebar />
         </Box>
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent p={10}>
-            <VStack spacing={2}>
-              <Button
-                colorScheme="teal"
-                onClick={() => {
-                  elements.push("Text");
-                }}
-              >
-                Text
-              </Button>
-              <Button
-                colorScheme="teal"
-                onClick={() => {
-                  elements.push("Input");
-                }}
-              >
-                Input
-              </Button>
-            </VStack>
-          </ModalContent>
-        </Modal>
-      </Box>
-    </Center>
+      </Flex>
+    </Box>
   );
-};
-
-export default Builder;
+}

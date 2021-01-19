@@ -31,7 +31,7 @@ const data = {
               },
               {
                 type: "CheckboxGroup",
-                label: "skills",
+                label: "Skills",
 
                 values: ["NextJS", "React", "MongoDB", "Express"],
               },
@@ -39,8 +39,8 @@ const data = {
                 type: "SelectList",
                 label: "Prefferd Job Profile",
                 values: [
-                  "Frontend Devf",
-                  "Backend Devf",
+                  "Frontend Dev.",
+                  "Backend Dev.",
                   "UI/UX designer",
                   "Project Analyst",
                   "Testing Prof.",
