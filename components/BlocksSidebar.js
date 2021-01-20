@@ -1,24 +1,87 @@
 import {
-  Flex,
+  useRadioGroup,
+  useRadio,
+  Input,
   Text,
-  Center,
-  ButtonGroup,
-  Button,
   IconButton,
   Box,
   VStack,
-  useDisclosure,
   Accordion,
   AccordionButton,
   AccordionIcon,
   AccordionPanel,
   AccordionItem,
-  Heading,
+  HStack,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 
-const AddButton = ({ data, k }) => {
-  console.log("key =>", k);
+function RadioCard(props) {
+  const { getInputProps, getCheckboxProps } = useRadio(props);
+
+  const input = getInputProps();
+  const checkbox = getCheckboxProps();
+
+  return (
+    <Box as="label">
+      <input {...input} />
+      <Box
+        {...checkbox}
+        cursor="pointer"
+        borderWidth="1px"
+        borderRadius="md"
+        boxShadow="md"
+        _checked={{
+          bg: "teal.600",
+          color: "white",
+          borderColor: "teal.600",
+        }}
+        _focus={{
+          boxShadow: "outline",
+        }}
+        px="0.5em"
+        py="0.3em"
+      >
+        <Text fontSize="12px">{props.children}</Text>
+      </Box>
+    </Box>
+  );
+}
+
+const Tabs = ({ text, keys }) => {
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    name: "headingSizes",
+    defaultValue: "Medium",
+    onChange: console.log,
+  });
+
+  const group = getRootProps();
+
+  return (
+    <VStack spacing={4}>
+      <HStack>
+        <Input size="sm" />
+        <IconButton
+          variant="outline"
+          colorScheme="teal"
+          size="sm"
+          icon={<AddIcon />}
+        />
+      </HStack>
+      <HStack {...group}>
+        {text.map((value) => {
+          const radio = getRadioProps({ value });
+          return (
+            <RadioCard key={value} {...radio}>
+              {value}
+            </RadioCard>
+          );
+        })}
+      </HStack>
+    </VStack>
+  );
+};
+
+const MenuItem = ({ data, k }) => {
   return (
     <AccordionItem>
       <AccordionButton>
@@ -29,22 +92,7 @@ const AddButton = ({ data, k }) => {
       </AccordionButton>
       <AccordionPanel>
         <VStack mt={2}>
-          {data.map((text) => {
-            return (
-              <ButtonGroup
-                colorScheme="teal"
-                size="sm"
-                w="100%"
-                isAttached
-                variant="outline"
-              >
-                <Button w="100%" mr="-px">
-                  {text}
-                </Button>
-                <IconButton icon={<AddIcon />}></IconButton>
-              </ButtonGroup>
-            );
-          })}
+          <Tabs text={data} keys={k} />;
         </VStack>
       </AccordionPanel>
     </AccordionItem>
@@ -62,9 +110,9 @@ const BlocksSidebar = () => {
   return (
     <Box>
       <VStack h="100%" p={4} borderRadius="lg">
-        <Accordion w="100%">
+        <Accordion w="100%" allowToggle>
           {Object.keys(blocks).map((key) => {
-            return <AddButton data={blocks[key]} k={key} />;
+            return <MenuItem data={blocks[key]} k={key} />;
           })}
         </Accordion>
       </VStack>
