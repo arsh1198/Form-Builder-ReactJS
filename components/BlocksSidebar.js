@@ -14,6 +14,8 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
+import { useContext, useState } from "react";
+import { BuilderContext } from "../contexts/builderContext";
 
 function RadioCard(props) {
   const { getInputProps, getCheckboxProps } = useRadio(props);
@@ -48,35 +50,40 @@ function RadioCard(props) {
 }
 
 const Tabs = ({ text, keys }) => {
+  const { pushHeading, blocks } = useContext(BuilderContext);
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: "headingSizes",
     defaultValue: "Medium",
     onChange: console.log,
   });
+  const [val, setVal] = useState("");
 
   const group = getRootProps();
-
+  console.log("block => ", blocks);
   return (
     <VStack spacing={4}>
       <HStack>
-        <Input size="sm" />
+        <Input size="sm" value={val} onChange={(e) => setVal(e.target.value)} />
         <IconButton
+          onClick={() => pushHeading(val)}
           variant="outline"
           colorScheme="teal"
           size="sm"
           icon={<AddIcon />}
         />
       </HStack>
-      <HStack {...group}>
-        {text.map((value) => {
-          const radio = getRadioProps({ value });
-          return (
-            <RadioCard key={value} {...radio}>
-              {value}
-            </RadioCard>
-          );
-        })}
-      </HStack>
+      {keys === "Heading" || keys === "Input" ? (
+        <HStack {...group}>
+          {text.map((value) => {
+            const radio = getRadioProps({ value });
+            return (
+              <RadioCard key={value} {...radio}>
+                {value}
+              </RadioCard>
+            );
+          })}
+        </HStack>
+      ) : null}
     </VStack>
   );
 };

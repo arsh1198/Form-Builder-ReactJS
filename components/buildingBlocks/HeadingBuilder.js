@@ -1,15 +1,9 @@
 import { Heading, Box, Input, FormControl } from "@chakra-ui/react";
 import { useState } from "react";
 
-const HeadingBuilder = () => {
-  const [value, setValue] = useState("");
+const HeadingBuilder = ({ value, size }) => {
   return (
     <>
-      <Input
-        variant="flushed"
-        onChange={(e) => setValue(e.target.value)}
-        type="text"
-      />
       <Heading>{value}</Heading>
     </>
   );
