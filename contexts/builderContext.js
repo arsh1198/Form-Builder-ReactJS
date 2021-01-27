@@ -9,7 +9,7 @@ const initialState = {
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "PUSH_HEADING":
+    case "PUSH_BLOCK":
       return { ...state, blocks: [...state.blocks, action.payload] };
   }
 };
@@ -17,15 +17,22 @@ const reducer = (state, action) => {
 const BuilderProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { blocks } = state;
-
-  const pushHeading = (heading) => {
+  console.log(blocks);
+  const pushHeading = (value) => {
     dispatch({
-      type: "PUSH_HEADING",
-      payload: { type: "Heading", value: heading },
+      type: "PUSH_BLOCK",
+      payload: { type: "Heading", value },
     });
   };
+  const pushInput = (label) => {
+    dispatch({
+      type: "PUSH_BLOCK",
+      payload: { type: "Input", label },
+    });
+  };
+
   return (
-    <BuilderContext.Provider value={{ blocks, pushHeading }}>
+    <BuilderContext.Provider value={{ blocks, pushHeading, pushInput }}>
       {children}
     </BuilderContext.Provider>
   );

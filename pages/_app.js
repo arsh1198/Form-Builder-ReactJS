@@ -3,10 +3,11 @@ import { ChakraProvider } from "@chakra-ui/react";
 import BuilderProvider from "../contexts/builderContext";
 
 function MyApp({ Component, pageProps }) {
-  console.log(pageProps);
   return (
     <ChakraProvider>
-      <Component {...pageProps} />
+      <BuilderProvider>
+        <Component {...pageProps} />
+      </BuilderProvider>
     </ChakraProvider>
   );
 }

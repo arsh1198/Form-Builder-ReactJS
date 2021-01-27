@@ -50,7 +50,7 @@ function RadioCard(props) {
 }
 
 const Tabs = ({ text, keys }) => {
-  const { pushHeading, blocks } = useContext(BuilderContext);
+  const { pushHeading, pushInput } = useContext(BuilderContext);
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: "headingSizes",
     defaultValue: "Medium",
@@ -59,13 +59,23 @@ const Tabs = ({ text, keys }) => {
   const [val, setVal] = useState("");
 
   const group = getRootProps();
-  console.log("block => ", blocks);
   return (
     <VStack spacing={4}>
       <HStack>
-        <Input size="sm" value={val} onChange={(e) => setVal(e.target.value)} />
+        <Input
+          size="sm"
+          value={val}
+          onChange={(event) => setVal(event.target.value)}
+        />
         <IconButton
-          onClick={() => pushHeading(val)}
+          onClick={() => {
+            switch (keys) {
+              case "Heading":
+                return pushHeading(val);
+              case "Input":
+                return pushInput(val);
+            }
+          }}
           variant="outline"
           colorScheme="teal"
           size="sm"
