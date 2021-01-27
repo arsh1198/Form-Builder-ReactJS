@@ -53,13 +53,13 @@ const Tabs = ({ text, keys }) => {
   const { pushHeading, pushInput } = useContext(BuilderContext);
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: "headingSizes",
-    defaultValue: "Medium",
+    defaultValue: keys === "Heading" ? "Medium" : "Text",
     onChange: console.log,
   });
   const [val, setVal] = useState("");
 
   const group = getRootProps();
-  return (
+  return keys === "Heading" || keys === "Input" ? (
     <VStack spacing={4}>
       <HStack>
         <Input
@@ -82,18 +82,40 @@ const Tabs = ({ text, keys }) => {
           icon={<AddIcon />}
         />
       </HStack>
-      {keys === "Heading" || keys === "Input" ? (
-        <HStack {...group}>
-          {text.map((value) => {
-            const radio = getRadioProps({ value });
-            return (
-              <RadioCard key={value} {...radio}>
-                {value}
-              </RadioCard>
-            );
-          })}
-        </HStack>
-      ) : null}
+
+      <HStack {...group}>
+        {text.map((value) => {
+          const radio = getRadioProps({ value });
+          return (
+            <RadioCard key={value} {...radio}>
+              {value}
+            </RadioCard>
+          );
+        })}
+      </HStack>
+    </VStack>
+  ) : (
+    <VStack>
+      <Input
+        placeholder="Label"
+        size="sm"
+        value={val}
+        onChange={(event) => setVal(event.target.value)}
+      />
+      <HStack>
+        <Input
+          placeholder="Values"
+          size="sm"
+          value={val}
+          onChange={(event) => setVal(event.target.value)}
+        />
+        <IconButton
+          variant="outline"
+          colorScheme="teal"
+          size="sm"
+          icon={<AddIcon />}
+        />
+      </HStack>
     </VStack>
   );
 };

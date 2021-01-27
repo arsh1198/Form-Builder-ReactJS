@@ -1,7 +1,6 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import BlocksSidebar from "../components/BlocksSidebar";
-import HeadingBuilder from "../components/buildingBlocks/HeadingBuilder";
-import BuilderProvider, { BuilderContext } from "../contexts/builderContext";
+import { BuilderContext } from "../contexts/builderContext";
 import Block from "../components/Block";
 import { useContext } from "react";
 

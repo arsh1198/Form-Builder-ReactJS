@@ -17,7 +17,6 @@ const reducer = (state, action) => {
 const BuilderProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { blocks } = state;
-  console.log(blocks);
   const pushHeading = (value) => {
     dispatch({
       type: "PUSH_BLOCK",
