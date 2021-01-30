@@ -1,4 +1,4 @@
-import { Box, IconButton, Text } from '@chakra-ui/react'
+import { Box, IconButton, Text, HStack, Heading } from '@chakra-ui/react'
 import CheckboxBlock from './blocks/CheckboxBlock'
 import HeadingBlock from './blocks/HeadingBlock'
 import InputBlock from './blocks/InputBlock'
@@ -45,17 +45,35 @@ function getBlock(data) {
 
 const Block = ({ data, deleteable }) => {
   return (
-    <Box className="block-container" style={{ position: 'relative' }}>
+    <Box
+      className="block-container"
+      style={{ position: 'relative' }}
+      borderRadius="md"
+    >
       {deleteable ? (
-        <IconButton
-          zIndex={1}
-          bg="#ff5252"
-          size="xs"
-          icon={<DeleteIcon color="white" />}
-          style={{ position: 'absolute', left: '90%' }}
-        />
+        data.type === 'Heading' ? (
+          <HStack>
+            {getBlock(data)}
+            <IconButton
+              zIndex={1}
+              bg="#ff5252"
+              size="xs"
+              icon={<DeleteIcon color="white" />}
+            />
+          </HStack>
+        ) : (
+          <>
+            <IconButton
+              zIndex={1}
+              bg="#ff5252"
+              size="xs"
+              icon={<DeleteIcon color="white" />}
+              style={{ position: 'absolute', left: '90%' }}
+            />
+            {getBlock(data)}
+          </>
+        )
       ) : null}
-      {getBlock(data)}
     </Box>
   )
 }

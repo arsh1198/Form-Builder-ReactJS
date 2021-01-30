@@ -1,11 +1,11 @@
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading } from '@chakra-ui/react'
 
 const HeadingBlock = ({ value }) => {
   return (
-    <Box my={5}>
+    <Box>
       <Heading size="lg">{value}</Heading>
     </Box>
-  );
-};
+  )
+}
 
-export default HeadingBlock;
+export default HeadingBlock
