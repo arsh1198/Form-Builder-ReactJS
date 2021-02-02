@@ -6,12 +6,16 @@ import {
   IconButton,
   Box,
   VStack,
+  Stack,
   Accordion,
   AccordionButton,
   AccordionIcon,
   AccordionPanel,
   AccordionItem,
-  HStack
+  HStack,
+  Button,
+  RadioGroup,
+  Radio
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { useContext, useState } from 'react'
@@ -49,7 +53,7 @@ function RadioCard(props) {
   )
 }
 
-const TextBuilder = ({ placeholder, options, defaultValue }) => {
+const TextBuilder = ({ type, label, placeholder, options, defaultValue }) => {
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: 'framework',
     defaultValue,
@@ -78,6 +82,76 @@ const TextBuilder = ({ placeholder, options, defaultValue }) => {
             </RadioCard>
           )
         })}
+      </HStack>
+    </VStack>
+  )
+}
+
+const MultiChoiceBuilder = ({ type, placeholder, onAddGroup }) => {
+  const [inputVal, setInputVal] = useState('')
+  const [values, setValues] = useState([])
+  const [selected, setSelected] = useState() // In case of Radio Button
+
+  const handleAddVal = () => {
+    if (values.includes(inputVal) || inputVal.trim() === '')
+      return alert('Nahi rayy')
+    setValues(prev => [...prev, inputVal])
+    selected === undefined && setSelected(inputVal)
+    setInputVal('')
+  }
+
+  const handleAddGroup = () => {
+    onAddGroup({
+      type,
+      selected,
+      values
+    })
+  }
+
+  return (
+    <VStack w="100%">
+      {type === 'RadioGroup'
+        ? values.length && (
+            <RadioGroup
+              w="100%"
+              onChange={val => {
+                setSelected(val)
+              }}
+              value={selected}
+            >
+              <Stack direction="column" align="start">
+                {values.map(value => (
+                  <Radio key={value} value={value}>
+                    {value}
+                  </Radio>
+                ))}
+              </Stack>
+            </RadioGroup>
+          )
+        : null}
+      <Input
+        value={inputVal}
+        onChange={e => setInputVal(e.target.value)}
+        placeholder={placeholder}
+        size="sm"
+      />
+      <HStack>
+        <Button
+          size="xs"
+          colorScheme="teal"
+          variant="outline"
+          onClick={handleAddVal}
+        >
+          Add Value
+        </Button>
+        <Button
+          size="xs"
+          colorScheme="teal"
+          variant="outline"
+          onClick={handleAddGroup}
+        >
+          Add Group
+        </Button>
       </HStack>
     </VStack>
   )
@@ -115,9 +189,16 @@ const BlocksSidebar = () => {
           <MenuItem title="Input">
             <TextBuilder
               type="input"
-              placeholder="Placeholder"
+              placeholder="Label"
               options={['Text', 'Email', 'Number']}
               defaultValue="Text"
+            />
+          </MenuItem>
+          <MenuItem title="Radio Group">
+            <MultiChoiceBuilder
+              type="RadioGroup"
+              placeholder="Enter Value"
+              onAddGroup={obj => alert(JSON.stringify(obj, null, 2))}
             />
           </MenuItem>
         </Accordion>
