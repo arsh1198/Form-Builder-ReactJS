@@ -49,43 +49,28 @@ function RadioCard(props) {
   )
 }
 
-const Tabs = ({ text, keys }) => {
-  const { pushHeading, pushInput } = useContext(BuilderContext)
+const TextBuilder = ({ placeholder, options, defaultValue }) => {
   const { getRootProps, getRadioProps } = useRadioGroup({
-    name: 'headingSizes',
-    defaultValue: keys === 'Heading' ? 'Medium' : 'Text',
+    name: 'framework',
+    defaultValue,
     onChange: console.log
   })
-  const [label, setLabel] = useState('')
-  const [val, setVal] = useState('')
 
   const group = getRootProps()
-  return keys === 'Heading' || keys === 'Input' ? (
-    <VStack spacing={4}>
+
+  return (
+    <VStack>
       <HStack>
-        <Input
-          size="sm"
-          value={val}
-          onChange={event => setVal(event.target.value)}
-        />
+        <Input placeholder={placeholder} size="sm" />
         <IconButton
-          onClick={() => {
-            switch (keys) {
-              case 'Heading':
-                return pushHeading(val)
-              case 'Input':
-                return pushInput(val)
-            }
-          }}
+          icon={<AddIcon />}
+          size="sm"
           variant="outline"
           colorScheme="teal"
-          size="sm"
-          icon={<AddIcon />}
         />
       </HStack>
-
       <HStack {...group}>
-        {text.map(value => {
+        {options.map(value => {
           const radio = getRadioProps({ value })
           return (
             <RadioCard key={value} {...radio}>
@@ -95,65 +80,46 @@ const Tabs = ({ text, keys }) => {
         })}
       </HStack>
     </VStack>
-  ) : (
-    <VStack>
-      <Input
-        placeholder="Label"
-        size="sm"
-        value={label}
-        onChange={event => setLabel(event.target.value)}
-      />
-      <HStack>
-        <Input
-          placeholder="Values"
-          size="sm"
-          value={val}
-          onChange={event => setVal(event.target.value)}
-        />
-        <IconButton
-          variant="outline"
-          colorScheme="teal"
-          size="sm"
-          icon={<AddIcon />}
-        />
-      </HStack>
-    </VStack>
   )
 }
 
-const MenuItem = ({ data, k }) => {
+const MenuItem = ({ title, children }) => {
   return (
-    <AccordionItem key={k}>
+    <AccordionItem>
       <AccordionButton>
         <Text fontSize={16} fontWeight="bold" flex="1" textAlign="left">
-          {k}
+          {title}
         </Text>
         <AccordionIcon />
       </AccordionButton>
       <AccordionPanel>
-        <VStack mt={2}>
-          <Tabs text={data} keys={k} />;
-        </VStack>
+        <VStack mt={2}>{children}</VStack>
       </AccordionPanel>
     </AccordionItem>
   )
 }
 
 const BlocksSidebar = () => {
-  const blocks = {
-    Heading: ['Small', 'Medium', 'Large'],
-    Input: ['Text', 'Email', 'Number'],
-    RadioGroup: ['Radio Group'],
-    CheckboxGroup: ['Chekbox Group'],
-    OptionsList: ['Options List']
-  }
   return (
     <Box>
       <VStack h="100%" p={4} borderRadius="lg">
         <Accordion w="100%" allowToggle>
-          {Object.keys(blocks).map(key => {
-            return <MenuItem data={blocks[key]} k={key} />
-          })}
+          <MenuItem title="Heading">
+            <TextBuilder
+              type="heading"
+              placeholder="Heading"
+              options={['Small', 'Medium', 'Large']}
+              defaultValue="Medium"
+            />
+          </MenuItem>
+          <MenuItem title="Input">
+            <TextBuilder
+              type="input"
+              placeholder="Placeholder"
+              options={['Text', 'Email', 'Number']}
+              defaultValue="Text"
+            />
+          </MenuItem>
         </Accordion>
       </VStack>
     </Box>
