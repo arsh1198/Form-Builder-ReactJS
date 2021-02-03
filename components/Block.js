@@ -46,6 +46,8 @@ function getBlock(data) {
 const Block = ({ data, deleteable }) => {
   return (
     <Box
+      borderWidth={1}
+      borderColor="#008080"
       className="block-container"
       style={{ position: 'relative' }}
       borderRadius="md"

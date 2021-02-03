@@ -1,4 +1,5 @@
 import {
+  Divider,
   useRadioGroup,
   useRadio,
   Input,
@@ -15,7 +16,10 @@ import {
   HStack,
   Button,
   RadioGroup,
-  Radio
+  Radio,
+  CheckboxGroup,
+  Checkbox,
+  Select
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { useContext, useState } from 'react'
@@ -53,20 +57,35 @@ function RadioCard(props) {
   )
 }
 
-const TextBuilder = ({ type, label, placeholder, options, defaultValue }) => {
+const HeadingBuilder = ({ onAddField }) => {
+  const [inputVal, setInputVal] = useState()
+  const options = ['Small', 'Medium', 'Large']
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: 'framework',
-    defaultValue,
+    defaultValue: 'Medium',
     onChange: console.log
   })
+
+  const handleAddField = () => {
+    onAddField({
+      type: 'Heading',
+      value: inputVal
+    })
+  }
 
   const group = getRootProps()
 
   return (
     <VStack>
       <HStack>
-        <Input placeholder={placeholder} size="sm" />
+        <Input
+          value={inputVal}
+          onChange={e => setInputVal(e.target.value)}
+          placeholder="Enter the text"
+          size="sm"
+        />
         <IconButton
+          onClick={handleAddField}
           icon={<AddIcon />}
           size="sm"
           variant="outline"
@@ -87,7 +106,57 @@ const TextBuilder = ({ type, label, placeholder, options, defaultValue }) => {
   )
 }
 
-const MultiChoiceBuilder = ({ type, placeholder, onAddGroup }) => {
+const InputBuilder = ({ onAddField }) => {
+  const [inputVal, setInputVal] = useState()
+  const options = ['Text', 'Email', 'Number']
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    name: 'framework',
+    defaultValue: 'Text',
+    onChange: console.log
+  })
+
+  const handleAddField = () => {
+    onAddField({
+      type: 'Input',
+      label: inputVal
+    })
+  }
+
+  const group = getRootProps()
+
+  return (
+    <VStack>
+      <HStack>
+        <Input
+          value={inputVal}
+          onChange={e => setInputVal(e.target.value)}
+          placeholder="Enter the text"
+          size="sm"
+        />
+        <IconButton
+          onClick={handleAddField}
+          icon={<AddIcon />}
+          size="sm"
+          variant="outline"
+          colorScheme="teal"
+        />
+      </HStack>
+      <HStack {...group}>
+        {options.map(value => {
+          const radio = getRadioProps({ value })
+          return (
+            <RadioCard key={value} {...radio}>
+              {value}
+            </RadioCard>
+          )
+        })}
+      </HStack>
+    </VStack>
+  )
+}
+
+const RadioGroupBuilder = ({ onAddGroup }) => {
+  const [label, setLabel] = useState('')
   const [inputVal, setInputVal] = useState('')
   const [values, setValues] = useState([])
   const [selected, setSelected] = useState() // In case of Radio Button
@@ -102,64 +171,212 @@ const MultiChoiceBuilder = ({ type, placeholder, onAddGroup }) => {
 
   const handleAddGroup = () => {
     onAddGroup({
-      type,
-      selected,
+      type: 'RadioGroup',
+      label,
+      values,
+      selected
+    })
+  }
+
+  return (
+    <VStack w="100%">
+      <Input
+        value={label}
+        onChange={e => setLabel(e.target.value)}
+        placeholder="Label"
+        size="sm"
+      />
+
+      <HStack>
+        <Input
+          value={inputVal}
+          onChange={e => setInputVal(e.target.value)}
+          placeholder="Add Radio Button"
+          size="sm"
+        />
+        <IconButton
+          onClick={handleAddVal}
+          icon={<AddIcon />}
+          size="sm"
+          variant="outline"
+          colorScheme="teal"
+        />
+      </HStack>
+      {values.length && (
+        <RadioGroup
+          w="100%"
+          onChange={val => {
+            setSelected(val)
+          }}
+          value={selected}
+        >
+          <Divider />
+          <Stack py={4} direction="column" align="start">
+            {values.map(value => (
+              <Radio key={value} value={value}>
+                {value}
+              </Radio>
+            ))}
+          </Stack>
+          <Divider />
+        </RadioGroup>
+      )}
+      <Button
+        w="100%"
+        size="sm"
+        colorScheme="teal"
+        variant="outline"
+        onClick={handleAddGroup}
+      >
+        Add Group
+      </Button>
+    </VStack>
+  )
+}
+
+const CheckBoxBuilder = ({ onAddGroup }) => {
+  const [label, setLabel] = useState('')
+  const [inputVal, setInputVal] = useState('')
+  const [values, setValues] = useState([])
+  const [selected, setSelected] = useState([])
+
+  const handleAddVal = () => {
+    if (values.includes(inputVal) || inputVal.trim() === '')
+      return alert('Nahi rayy')
+    setValues(prev => [...prev, inputVal])
+    selected === undefined && setSelected(inputVal)
+    setInputVal('')
+  }
+
+  const handleAddGroup = () => {
+    onAddGroup({
+      type: 'CheckboxGroup',
+      label,
       values
     })
   }
 
   return (
     <VStack w="100%">
-      {type === 'RadioGroup'
-        ? values.length && (
-            <RadioGroup
-              w="100%"
-              onChange={val => {
-                setSelected(val)
-              }}
-              value={selected}
-            >
-              <Stack direction="column" align="start">
-                {values.map(value => (
-                  <Radio key={value} value={value}>
-                    {value}
-                  </Radio>
-                ))}
-              </Stack>
-            </RadioGroup>
-          )
-        : null}
       <Input
-        value={inputVal}
-        onChange={e => setInputVal(e.target.value)}
-        placeholder={placeholder}
+        value={label}
+        onChange={e => setLabel(e.target.value)}
+        placeholder="Label"
         size="sm"
       />
+
       <HStack>
-        <Button
-          size="xs"
-          colorScheme="teal"
-          variant="outline"
+        <Input
+          value={inputVal}
+          onChange={e => setInputVal(e.target.value)}
+          placeholder="Add Checkbox"
+          size="sm"
+        />
+        <IconButton
           onClick={handleAddVal}
-        >
-          Add Value
-        </Button>
-        <Button
-          size="xs"
-          colorScheme="teal"
+          icon={<AddIcon />}
+          size="sm"
           variant="outline"
-          onClick={handleAddGroup}
-        >
-          Add Group
-        </Button>
+          colorScheme="teal"
+        />
       </HStack>
+      {values.length && (
+        <Box w="100%">
+          <Divider />
+          <Stack py={4} direction="column" align="start">
+            {values.map(value => (
+              <Checkbox w="100%" key={value} value={value}>
+                {value}
+              </Checkbox>
+            ))}
+          </Stack>
+          <Divider />
+        </Box>
+      )}
+      <Button
+        w="100%"
+        size="sm"
+        colorScheme="teal"
+        variant="outline"
+        onClick={handleAddGroup}
+      >
+        Add Group
+      </Button>
+    </VStack>
+  )
+}
+
+const SelectListBuilder = ({ onAddGroup }) => {
+  const [label, setLabel] = useState('')
+  const [inputVal, setInputVal] = useState('')
+  const [values, setValues] = useState([])
+
+  const handleAddVal = () => {
+    if (values.includes(inputVal) || inputVal.trim() === '')
+      return alert('Nahi rayy')
+    setValues(prev => [...prev, inputVal])
+    setInputVal('')
+  }
+
+  const handleAddGroup = () => {
+    onAddGroup({
+      type: 'SelectList',
+      label,
+      values
+    })
+  }
+
+  return (
+    <VStack w="100%">
+      <Input
+        value={label}
+        onChange={e => setLabel(e.target.value)}
+        placeholder="Label"
+        size="sm"
+      />
+
+      <HStack>
+        <Input
+          value={inputVal}
+          onChange={e => setInputVal(e.target.value)}
+          placeholder="Add List Item"
+          size="sm"
+        />
+        <IconButton
+          onClick={handleAddVal}
+          icon={<AddIcon />}
+          size="sm"
+          variant="outline"
+          colorScheme="teal"
+        />
+      </HStack>
+      {values.length && (
+        <>
+          <Divider />
+          <Select py={4} placeholder={label} w="100%">
+            {values.map(value => (
+              <option w="100%">{value}</option>
+            ))}
+          </Select>
+          <Divider />
+        </>
+      )}
+      <Button
+        w="100%"
+        size="sm"
+        colorScheme="teal"
+        variant="outline"
+        onClick={handleAddGroup}
+      >
+        Add Group
+      </Button>
     </VStack>
   )
 }
 
 const MenuItem = ({ title, children }) => {
   return (
-    <AccordionItem>
+    <AccordionItem h="100%">
       <AccordionButton>
         <Text fontSize={16} fontWeight="bold" flex="1" textAlign="left">
           {title}
@@ -177,27 +394,29 @@ const BlocksSidebar = () => {
   return (
     <Box>
       <VStack h="100%" p={4} borderRadius="lg">
-        <Accordion w="100%" allowToggle>
+        <Accordion h="100%" w="100%" allowToggle>
           <MenuItem title="Heading">
-            <TextBuilder
-              type="heading"
-              placeholder="Heading"
-              options={['Small', 'Medium', 'Large']}
-              defaultValue="Medium"
+            <HeadingBuilder
+              onAddField={obj => alert(JSON.stringify(obj, null, 2))}
             />
           </MenuItem>
           <MenuItem title="Input">
-            <TextBuilder
-              type="input"
-              placeholder="Label"
-              options={['Text', 'Email', 'Number']}
-              defaultValue="Text"
+            <InputBuilder
+              onAddField={obj => alert(JSON.stringify(obj, null, 2))}
             />
           </MenuItem>
           <MenuItem title="Radio Group">
-            <MultiChoiceBuilder
-              type="RadioGroup"
-              placeholder="Enter Value"
+            <RadioGroupBuilder
+              onAddGroup={obj => alert(JSON.stringify(obj, null, 2))}
+            />
+          </MenuItem>
+          <MenuItem title="Checkbox Group">
+            <CheckBoxBuilder
+              onAddGroup={obj => alert(JSON.stringify(obj, null, 2))}
+            />
+          </MenuItem>
+          <MenuItem title="Select List">
+            <SelectListBuilder
               onAddGroup={obj => alert(JSON.stringify(obj, null, 2))}
             />
           </MenuItem>

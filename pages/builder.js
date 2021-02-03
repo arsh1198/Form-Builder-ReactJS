@@ -23,16 +23,27 @@ export default function Builder() {
         <Box p={5} h="100vh" flex={1}>
           <Center>
             <Box
-              bg="#008080"
+              borderWidth={1}
+              borderColor="#008080"
+              bg="#E6FFFA"
               p={4}
               minW="30%"
               maxW="70%"
-              boxShadow="lg"
+              boxShadow="sm"
               borderRadius="lg"
             >
               {blocks.length === 0 ? (
                 <Center>
-                  <Text p={4} bg="#fff" borderRadius="md" fontWeight="bold">
+                  <Text
+                    boxShadow="lg"
+                    color="#008080"
+                    p={4}
+                    bg="#fff"
+                    borderRadius="md"
+                    fontWeight="bold"
+                    borderWidth={1}
+                    borderColor="#008080"
+                  >
                     You Need to Add Some Form Controls!
                   </Text>
                 </Center>
