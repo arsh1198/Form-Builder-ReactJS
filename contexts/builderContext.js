@@ -17,35 +17,16 @@ const reducer = (state, action) => {
 const BuilderProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
   const { blocks } = state
-  const pushHeading = value => {
+
+  const pushBlock = data => {
     dispatch({
       type: 'PUSH_BLOCK',
-      payload: { type: 'Heading', value }
+      payload: data
     })
   }
-  const pushInput = label => {
-    dispatch({
-      type: 'PUSH_BLOCK',
-      payload: { type: 'Input', label }
-    })
-  }
-  // const pushRGroup = (label) => {
-  //   dispatch({
-  //     type: "PUSH_BlOCK",
-  //     payload: {type: "RadioGroup", label, values:[]}
-  //   })
-  // }
-  // const pushRValues = (value, label) => {
-  //     if (state.blocks.find(obj => obj.label === label)){
-  //       dispatch({
-  //         type: "PUSH_VALUE",
-  //         payload: value
-  //       })
-  //     }
-  // }
 
   return (
-    <BuilderContext.Provider value={{ blocks, pushHeading, pushInput }}>
+    <BuilderContext.Provider value={{ pushBlock, blocks }}>
       {children}
     </BuilderContext.Provider>
   )

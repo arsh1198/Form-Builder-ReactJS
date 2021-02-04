@@ -1,10 +1,17 @@
-import { Box, IconButton, Text, HStack, Heading } from '@chakra-ui/react'
+import {
+  Box,
+  IconButton,
+  Text,
+  HStack,
+  Heading,
+  Tooltip
+} from '@chakra-ui/react'
 import CheckboxBlock from './blocks/CheckboxBlock'
 import HeadingBlock from './blocks/HeadingBlock'
 import InputBlock from './blocks/InputBlock'
 import RadioBlock from './blocks/RadioBlock'
 import SelectListBlock from './blocks/SelectListBlock'
-import { DeleteIcon } from '@chakra-ui/icons'
+import { CloseIcon } from '@chakra-ui/icons'
 
 function getBlock(data) {
   switch (data.type) {
@@ -56,22 +63,26 @@ const Block = ({ data, deleteable }) => {
         data.type === 'Heading' ? (
           <HStack>
             {getBlock(data)}
-            <IconButton
-              zIndex={1}
-              bg="#ff5252"
-              size="xs"
-              icon={<DeleteIcon color="white" />}
-            />
+            <Tooltip label="Delete Block">
+              <IconButton
+                zIndex={1}
+                bg="#ff5252"
+                size="xs"
+                icon={<CloseIcon color="white" />}
+              />
+            </Tooltip>
           </HStack>
         ) : (
           <>
-            <IconButton
-              zIndex={1}
-              bg="#ff5252"
-              size="xs"
-              icon={<DeleteIcon color="white" />}
-              style={{ position: 'absolute', left: '90%' }}
-            />
+            <Tooltip label="Delete Block">
+              <IconButton
+                zIndex={1}
+                bg="#ff5252"
+                size="xs"
+                icon={<CloseIcon color="white" />}
+                style={{ position: 'absolute', left: '90%' }}
+              />
+            </Tooltip>
             {getBlock(data)}
           </>
         )

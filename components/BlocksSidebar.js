@@ -391,34 +391,25 @@ const MenuItem = ({ title, children }) => {
 }
 
 const BlocksSidebar = () => {
+  const { pushBlock } = useContext(BuilderContext)
   return (
     <Box>
       <VStack h="100%" p={4} borderRadius="lg">
         <Accordion h="100%" w="100%" allowToggle>
           <MenuItem title="Heading">
-            <HeadingBuilder
-              onAddField={obj => alert(JSON.stringify(obj, null, 2))}
-            />
+            <HeadingBuilder onAddField={pushBlock} />
           </MenuItem>
           <MenuItem title="Input">
-            <InputBuilder
-              onAddField={obj => alert(JSON.stringify(obj, null, 2))}
-            />
+            <InputBuilder onAddField={pushBlock} />
           </MenuItem>
           <MenuItem title="Radio Group">
-            <RadioGroupBuilder
-              onAddGroup={obj => alert(JSON.stringify(obj, null, 2))}
-            />
+            <RadioGroupBuilder onAddGroup={pushBlock} />
           </MenuItem>
           <MenuItem title="Checkbox Group">
-            <CheckBoxBuilder
-              onAddGroup={obj => alert(JSON.stringify(obj, null, 2))}
-            />
+            <CheckBoxBuilder onAddGroup={pushBlock} />
           </MenuItem>
           <MenuItem title="Select List">
-            <SelectListBuilder
-              onAddGroup={obj => alert(JSON.stringify(obj, null, 2))}
-            />
+            <SelectListBuilder onAddGroup={pushBlock} />
           </MenuItem>
         </Accordion>
       </VStack>
