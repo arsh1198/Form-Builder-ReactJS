@@ -50,7 +50,7 @@ function getBlock(data) {
   }
 }
 
-const Block = ({ data, deleteable }) => {
+const Block = ({ data, deleteable, onDelete }) => {
   return (
     <Box
       borderWidth={1}
@@ -65,6 +65,7 @@ const Block = ({ data, deleteable }) => {
             {getBlock(data)}
             <Tooltip label="Delete Block">
               <IconButton
+                onClick={onDelete}
                 zIndex={1}
                 bg="#ff5252"
                 size="xs"
@@ -76,6 +77,7 @@ const Block = ({ data, deleteable }) => {
           <>
             <Tooltip label="Delete Block">
               <IconButton
+                onClick={onDelete}
                 zIndex={1}
                 bg="#ff5252"
                 size="xs"

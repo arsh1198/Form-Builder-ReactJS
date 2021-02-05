@@ -5,10 +5,17 @@ import Block from '../components/Block'
 import { useContext } from 'react'
 
 function getBlocks(blocksArr) {
-  return blocksArr.map(data => {
+  const { deleteBlock } = useContext(BuilderContext)
+  return blocksArr.map((data, index) => {
     return (
       <ListItem>
-        <Block data={data} deleteable />
+        <Block
+          data={data}
+          deleteable
+          onDelete={() => {
+            deleteBlock(index)
+          }}
+        />
       </ListItem>
     )
   })
