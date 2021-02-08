@@ -27,9 +27,10 @@ export default function Builder() {
   return (
     <Box>
       <Flex>
-        <Box p={5} h="100vh" flex={1}>
+        <Box h="100vh" flex={1} overflowY="auto">
           <Center>
             <Box
+              my={4}
               borderWidth={1}
               borderColor="#008080"
               bg="#E6FFFA"

@@ -12,7 +12,9 @@ const reducer = (state, action) => {
     case 'PUSH_BLOCK':
       return { ...state, blocks: [...state.blocks, action.payload] }
     case 'DELETE_BLOCK':
-      return { ...state, blocks: action.payload }
+      const tempData = [...state.blocks]
+      tempData.splice(action.payload, 1)
+      return { ...state, blocks: tempData }
   }
 }
 
@@ -28,9 +30,7 @@ const BuilderProvider = ({ children }) => {
   }
 
   const deleteBlock = index => {
-    const tempData = [...blocks]
-    tempData.splice(index, 1)
-    dispatch({ type: 'DELETE_BLOCK', payload: tempData })
+    dispatch({ type: 'DELETE_BLOCK', payload: index })
   }
 
   return (

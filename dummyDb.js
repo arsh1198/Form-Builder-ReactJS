@@ -29,6 +29,7 @@ const data = {
                 selected: 0,
                 values: ['Male', 'Female', 'Prefer Not to say']
               },
+              { type: 'Date', label: 'Date of Birth' },
               {
                 type: 'CheckboxGroup',
                 label: 'Skills',

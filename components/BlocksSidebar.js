@@ -71,6 +71,7 @@ const HeadingBuilder = ({ onAddField }) => {
       type: 'Heading',
       value: inputVal
     })
+    setInputVal('')
   }
 
   const group = getRootProps()
@@ -108,18 +109,21 @@ const HeadingBuilder = ({ onAddField }) => {
 
 const InputBuilder = ({ onAddField }) => {
   const [inputVal, setInputVal] = useState()
+  const [inputType, setInputType] = useState()
   const options = ['Text', 'Email', 'Number']
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: 'framework',
     defaultValue: 'Text',
-    onChange: console.log
+    onChange: setInputType
   })
 
   const handleAddField = () => {
     onAddField({
       type: 'Input',
-      label: inputVal
+      label: inputVal,
+      inputType
     })
+    setInputVal('')
   }
 
   const group = getRootProps()
@@ -176,6 +180,7 @@ const RadioGroupBuilder = ({ onAddGroup }) => {
       values,
       selected
     })
+    setLabel('')
   }
 
   return (
@@ -254,6 +259,7 @@ const CheckBoxBuilder = ({ onAddGroup }) => {
       label,
       values
     })
+    setLabel('')
   }
 
   return (
@@ -324,6 +330,7 @@ const SelectListBuilder = ({ onAddGroup }) => {
       label,
       values
     })
+    setLabel('')
   }
 
   return (

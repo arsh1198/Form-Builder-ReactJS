@@ -2,9 +2,17 @@ import { Box, Heading } from '@chakra-ui/react'
 
 const HeadingBlock = ({ value }) => {
   return (
-    <Box>
-      <Heading size="lg">{value}</Heading>
-    </Box>
+    <Heading
+      style={{
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap'
+      }}
+      size="lg"
+      title={value}
+    >
+      {value}
+    </Heading>
   )
 }
 

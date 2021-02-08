@@ -12,6 +12,7 @@ import InputBlock from './blocks/InputBlock'
 import RadioBlock from './blocks/RadioBlock'
 import SelectListBlock from './blocks/SelectListBlock'
 import { CloseIcon } from '@chakra-ui/icons'
+import DateBlock from './blocks/DateBlock'
 
 function getBlock(data) {
   switch (data.type) {
@@ -20,7 +21,7 @@ function getBlock(data) {
     case 'Input':
       return (
         <InputBlock
-          inputType="text"
+          inputType={data.inputType}
           label={data.label}
           placeholder={data.placeholder}
           required={data.required}
@@ -47,6 +48,8 @@ function getBlock(data) {
       return <CheckboxBlock label={data.label} values={data.values} />
     case 'SelectList':
       return <SelectListBlock label={data.label} values={data.values} />
+    case 'Date':
+      return <DateBlock label={data.label} />
   }
 }
 
@@ -82,13 +85,15 @@ const Block = ({ data, deleteable, onDelete }) => {
                 bg="#ff5252"
                 size="xs"
                 icon={<CloseIcon color="white" />}
-                style={{ position: 'absolute', left: '90%' }}
+                style={{ position: 'absolute', right: 20 }}
               />
             </Tooltip>
             {getBlock(data)}
           </>
         )
-      ) : null}
+      ) : (
+        getBlock(data)
+      )}
     </Box>
   )
 }
