@@ -4,7 +4,7 @@ const getOptions = values => {
   return values.map(text => <option>{text}</option>)
 }
 
-const SelectListBlock = ({ label, values }) => {
+const SelectListBlock = ({ label, values, disabled }) => {
   return (
     <>
       <FormLabel>{label}</FormLabel>

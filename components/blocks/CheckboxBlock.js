@@ -16,7 +16,7 @@ const CheckboxBlock = ({ label, values }) => {
   return (
     <>
       <FormLabel>{label}</FormLabel>
-      <CheckboxGroup colorScheme="teal">
+      <CheckboxGroup>
         <HStack spacing={4} mt={4}>
           {getCheckBox(values)}
         </HStack>

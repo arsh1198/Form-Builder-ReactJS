@@ -19,7 +19,9 @@ import {
   Radio,
   CheckboxGroup,
   Checkbox,
-  Select
+  Select,
+  FormHelperText,
+  FormControl
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { useContext, useState } from 'react'
@@ -58,15 +60,13 @@ function RadioCard(props) {
 }
 
 const HeadingBuilder = ({ onAddField }) => {
-  const [inputVal, setInputVal] = useState()
-  const options = ['Small', 'Medium', 'Large']
-  const { getRootProps, getRadioProps } = useRadioGroup({
-    name: 'framework',
-    defaultValue: 'Medium',
-    onChange: console.log
-  })
+  const [inputVal, setInputVal] = useState('')
+  const [isInvalid, setInvalid] = useState(false)
 
   const handleAddField = () => {
+    if (inputVal.trim() === '') {
+      return setInvalid(true)
+    }
     onAddField({
       type: 'Heading',
       value: inputVal
@@ -74,15 +74,18 @@ const HeadingBuilder = ({ onAddField }) => {
     setInputVal('')
   }
 
-  const group = getRootProps()
-
   return (
     <VStack>
       <HStack>
         <Input
+          isInvalid={isInvalid}
           value={inputVal}
-          onChange={e => setInputVal(e.target.value)}
-          placeholder="Enter the text"
+          onChange={e => {
+            setInputVal(e.target.value)
+            setInvalid(false)
+          }}
+          onFocus={() => setInvalid(false)}
+          placeholder={isInvalid ? 'Invalid Input!' : 'Heading'}
           size="sm"
         />
         <IconButton
@@ -93,31 +96,25 @@ const HeadingBuilder = ({ onAddField }) => {
           colorScheme="teal"
         />
       </HStack>
-      <HStack {...group}>
-        {options.map(value => {
-          const radio = getRadioProps({ value })
-          return (
-            <RadioCard key={value} {...radio}>
-              {value}
-            </RadioCard>
-          )
-        })}
-      </HStack>
     </VStack>
   )
 }
 
 const InputBuilder = ({ onAddField }) => {
-  const [inputVal, setInputVal] = useState()
-  const [inputType, setInputType] = useState()
+  const [inputVal, setInputVal] = useState('')
+  const [inputType, setInputType] = useState('')
+  const [isInvalid, setInvalid] = useState(false)
   const options = ['Text', 'Email', 'Number']
   const { getRootProps, getRadioProps } = useRadioGroup({
-    name: 'framework',
+    name: 'InputType',
     defaultValue: 'Text',
     onChange: setInputType
   })
 
   const handleAddField = () => {
+    if (inputVal.trim() === '') {
+      return setInvalid(true)
+    }
     onAddField({
       type: 'Input',
       label: inputVal,
@@ -132,9 +129,14 @@ const InputBuilder = ({ onAddField }) => {
     <VStack>
       <HStack>
         <Input
+          isInvalid={isInvalid}
           value={inputVal}
-          onChange={e => setInputVal(e.target.value)}
-          placeholder="Enter the text"
+          onChange={e => {
+            setInputVal(e.target.value)
+            setInvalid(false)
+          }}
+          onFocus={() => setInvalid(false)}
+          placeholder={isInvalid ? 'Invalid Input!' : 'Input'}
           size="sm"
         />
         <IconButton
@@ -164,39 +166,63 @@ const RadioGroupBuilder = ({ onAddGroup }) => {
   const [inputVal, setInputVal] = useState('')
   const [values, setValues] = useState([])
   const [selected, setSelected] = useState() // In case of Radio Button
+  const [isInvalid, setInvalid] = useState(false)
+  const [isLabelinvalid, setLabelInvalid] = useState(false)
 
   const handleAddVal = () => {
+    setLabelInvalid(false)
     if (values.includes(inputVal) || inputVal.trim() === '')
-      return alert('Nahi rayy')
+      return setInvalid(true)
+
     setValues(prev => [...prev, inputVal])
     selected === undefined && setSelected(inputVal)
+
     setInputVal('')
   }
 
   const handleAddGroup = () => {
+    setInvalid(false)
+    if (label.trim() === '') return setLabelInvalid(true)
     onAddGroup({
       type: 'RadioGroup',
       label,
       values,
       selected
     })
+
     setLabel('')
   }
 
   return (
     <VStack w="100%">
       <Input
+        isInvalid={isLabelinvalid}
         value={label}
-        onChange={e => setLabel(e.target.value)}
-        placeholder="Label"
+        onChange={e => {
+          setLabel(e.target.value)
+          setLabelInvalid(false)
+        }}
+        onFocus={() => {
+          setLabelInvalid(false)
+          setInvalid(false)
+        }}
+        placeholder={isLabelinvalid ? 'Invalid Label!' : 'Label'}
         size="sm"
       />
 
       <HStack>
         <Input
+          isInvalid={isInvalid}
           value={inputVal}
-          onChange={e => setInputVal(e.target.value)}
-          placeholder="Add Radio Button"
+          onChange={e => {
+            setInputVal(e.target.value)
+            setInvalid(false)
+          }}
+          onFocus={() => {
+            setInvalid(false)
+            setLabelInvalid(false)
+          }}
+          placeholder={isInvalid ? 'Invalid Input!' : 'Add Radio Button'}
           size="sm"
         />
         <IconButton
@@ -381,6 +407,38 @@ const SelectListBuilder = ({ onAddGroup }) => {
   )
 }
 
+const DateBuilder = ({ onAddField }) => {
+  const [label, setLabel] = useState()
+
+  const handleAddField = () => {
+    onAddField({
+      type: 'Date',
+      label: label
+    })
+    setLabel('')
+  }
+
+  return (
+    <VStack>
+      <HStack>
+        <Input
+          value={label}
+          onChange={e => setLabel(e.target.value)}
+          placeholder="Label"
+          size="sm"
+        />
+        <IconButton
+          onClick={handleAddField}
+          icon={<AddIcon />}
+          size="sm"
+          variant="outline"
+          colorScheme="teal"
+        />
+      </HStack>
+    </VStack>
+  )
+}
+
 const MenuItem = ({ title, children }) => {
   return (
     <AccordionItem h="100%">
@@ -417,6 +475,9 @@ const BlocksSidebar = () => {
           </MenuItem>
           <MenuItem title="Select List">
             <SelectListBuilder onAddGroup={pushBlock} />
+          </MenuItem>
+          <MenuItem title="Date">
+            <DateBuilder onAddField={pushBlock} />
           </MenuItem>
         </Accordion>
       </VStack>

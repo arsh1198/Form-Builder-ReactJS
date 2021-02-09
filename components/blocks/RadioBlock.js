@@ -10,7 +10,7 @@ const RadioBlock = ({ label, values, selected }) => {
   return (
     <>
       <FormLabel>{label}</FormLabel>
-      <RadioGroup colorScheme="teal" mt={4} defaultValue={`${selected + 1}`}>
+      <RadioGroup mt={4} defaultValue={`${selected + 1}`}>
         <Stack>{getRadio(values)}</Stack>
       </RadioGroup>
     </>
