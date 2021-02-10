@@ -1,8 +1,8 @@
-import { FormLabel } from '@chakra-ui/react'
+import { FormControl, FormLabel } from '@chakra-ui/react'
 
-const DateBlock = ({ label }) => {
+const DateBlock = ({ label, required }) => {
   return (
-    <>
+    <FormControl isRequired={required}>
       <FormLabel>{label}</FormLabel>
       <input
         style={{
@@ -19,7 +19,7 @@ const DateBlock = ({ label }) => {
         }}
         type="date"
       />
-    </>
+    </FormControl>
   )
 }
 export default DateBlock

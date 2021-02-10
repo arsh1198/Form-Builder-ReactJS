@@ -1,4 +1,11 @@
-import { Box, RadioGroup, Radio, Stack, FormLabel } from '@chakra-ui/react'
+import {
+  Box,
+  RadioGroup,
+  Radio,
+  Stack,
+  FormLabel,
+  FormControl
+} from '@chakra-ui/react'
 
 function getRadio(values) {
   return values.map((text, index) => (
@@ -6,14 +13,14 @@ function getRadio(values) {
   ))
 }
 
-const RadioBlock = ({ label, values, selected }) => {
+const RadioBlock = ({ label, values, selected, required }) => {
   return (
-    <>
+    <FormControl isRequired={required}>
       <FormLabel>{label}</FormLabel>
       <RadioGroup mt={4} defaultValue={`${selected + 1}`}>
         <Stack>{getRadio(values)}</Stack>
       </RadioGroup>
-    </>
+    </FormControl>
   )
 }
 

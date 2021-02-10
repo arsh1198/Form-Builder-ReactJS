@@ -42,14 +42,27 @@ function getBlock(data) {
           label={data.label}
           values={data.values}
           selected={data.selected}
+          required={data.required}
         />
       )
     case 'CheckboxGroup':
-      return <CheckboxBlock label={data.label} values={data.values} />
+      return (
+        <CheckboxBlock
+          label={data.label}
+          values={data.values}
+          required={data.required}
+        />
+      )
     case 'SelectList':
-      return <SelectListBlock label={data.label} values={data.values} />
+      return (
+        <SelectListBlock
+          label={data.label}
+          values={data.values}
+          required={data.required}
+        />
+      )
     case 'Date':
-      return <DateBlock label={data.label} />
+      return <DateBlock label={data.label} required={data.required} />
   }
 }
 

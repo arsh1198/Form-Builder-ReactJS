@@ -33,7 +33,6 @@ const data = {
               {
                 type: 'CheckboxGroup',
                 label: 'Skills',
-
                 values: ['NextJS', 'React', 'MongoDB', 'Express']
               },
               {

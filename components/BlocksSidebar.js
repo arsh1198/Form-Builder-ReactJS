@@ -15,6 +15,7 @@ import {
   AccordionItem,
   HStack,
   Button,
+  ButtonGroup,
   RadioGroup,
   Radio,
   CheckboxGroup,
@@ -75,27 +76,27 @@ const HeadingBuilder = ({ onAddField }) => {
   }
 
   return (
-    <VStack>
-      <HStack>
-        <Input
-          isInvalid={isInvalid}
-          value={inputVal}
-          onChange={e => {
-            setInputVal(e.target.value)
-            setInvalid(false)
-          }}
-          onFocus={() => setInvalid(false)}
-          placeholder={isInvalid ? 'Invalid Input!' : 'Heading'}
-          size="sm"
-        />
-        <IconButton
-          onClick={handleAddField}
-          icon={<AddIcon />}
-          size="sm"
-          variant="outline"
-          colorScheme="teal"
-        />
-      </HStack>
+    <VStack w="100%">
+      <Input
+        isInvalid={isInvalid}
+        value={inputVal}
+        onChange={e => {
+          setInputVal(e.target.value)
+          setInvalid(false)
+        }}
+        onFocus={() => setInvalid(false)}
+        placeholder={isInvalid ? 'Invalid Input!' : 'Heading'}
+        size="sm"
+      />
+      <Button
+        colorScheme="teal"
+        variant="outline"
+        w="100%"
+        size="sm"
+        onClick={handleAddField}
+      >
+        Add Field
+      </Button>
     </VStack>
   )
 }
@@ -104,6 +105,7 @@ const InputBuilder = ({ onAddField }) => {
   const [inputVal, setInputVal] = useState('')
   const [inputType, setInputType] = useState('')
   const [isInvalid, setInvalid] = useState(false)
+  const [required, setRequired] = useState(false)
   const options = ['Text', 'Email', 'Number']
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: 'InputType',
@@ -118,7 +120,8 @@ const InputBuilder = ({ onAddField }) => {
     onAddField({
       type: 'Input',
       label: inputVal,
-      inputType
+      inputType,
+      required
     })
     setInputVal('')
   }
@@ -126,37 +129,41 @@ const InputBuilder = ({ onAddField }) => {
   const group = getRootProps()
 
   return (
-    <VStack>
-      <HStack>
-        <Input
-          isInvalid={isInvalid}
-          value={inputVal}
-          onChange={e => {
-            setInputVal(e.target.value)
-            setInvalid(false)
-          }}
-          onFocus={() => setInvalid(false)}
-          placeholder={isInvalid ? 'Invalid Input!' : 'Input'}
-          size="sm"
-        />
-        <IconButton
-          onClick={handleAddField}
-          icon={<AddIcon />}
-          size="sm"
-          variant="outline"
-          colorScheme="teal"
-        />
-      </HStack>
+    <VStack w="100%">
+      <Input
+        isInvalid={isInvalid}
+        value={inputVal}
+        onChange={e => {
+          setInputVal(e.target.value)
+          setInvalid(false)
+        }}
+        onFocus={() => setInvalid(false)}
+        placeholder={isInvalid ? 'Invalid Input!' : 'Label'}
+        size="sm"
+      />
+
       <HStack {...group}>
         {options.map(value => {
           const radio = getRadioProps({ value })
-          return (
-            <RadioCard key={value} {...radio}>
-              {value}
-            </RadioCard>
-          )
+          return <RadioCard {...radio}>{value}</RadioCard>
         })}
       </HStack>
+      <HStack>
+        <Text color="#f00" fontSize={14}>
+          Mark Required
+        </Text>
+        <Checkbox onChange={() => setRequired(prev => !prev)} size="sm" />
+      </HStack>
+
+      <Button
+        colorScheme="teal"
+        variant="outline"
+        w="100%"
+        size="sm"
+        onClick={handleAddField}
+      >
+        Add Field
+      </Button>
     </VStack>
   )
 }
@@ -168,6 +175,7 @@ const RadioGroupBuilder = ({ onAddGroup }) => {
   const [selected, setSelected] = useState() // In case of Radio Button
   const [isInvalid, setInvalid] = useState(false)
   const [isLabelinvalid, setLabelInvalid] = useState(false)
+  const [required, setRequired] = useState(false)
 
   const handleAddVal = () => {
     setLabelInvalid(false)
@@ -183,14 +191,17 @@ const RadioGroupBuilder = ({ onAddGroup }) => {
   const handleAddGroup = () => {
     setInvalid(false)
     if (label.trim() === '') return setLabelInvalid(true)
+    if (values.length < 1) return setInvalid(true)
     onAddGroup({
       type: 'RadioGroup',
       label,
       values,
-      selected
+      selected,
+      required
     })
-
     setLabel('')
+    setValues([])
+    setSelected(undefined)
   }
 
   return (
@@ -242,25 +253,42 @@ const RadioGroupBuilder = ({ onAddGroup }) => {
           value={selected}
         >
           <Divider />
-          <Stack py={4} direction="column" align="start">
-            {values.map(value => (
-              <Radio key={value} value={value}>
-                {value}
-              </Radio>
-            ))}
-          </Stack>
+          <FormControl>
+            <Stack py={2} direction="column" align="start">
+              {values.map(value => (
+                <Radio key={value} value={value}>
+                  {value}
+                </Radio>
+              ))}
+            </Stack>
+            <HStack>
+              <Text color="#f00" fontSize={14}>
+                Mark Required
+              </Text>
+              <Checkbox onChange={() => setRequired(prev => !prev)} size="sm" />
+            </HStack>
+          </FormControl>
           <Divider />
         </RadioGroup>
       )}
-      <Button
-        w="100%"
+      <ButtonGroup
+        width="100%"
         size="sm"
+        isAttached
         colorScheme="teal"
         variant="outline"
-        onClick={handleAddGroup}
       >
-        Add Group
-      </Button>
+        <Button w="80%" size="sm" onClick={handleAddGroup}>
+          Add Group
+        </Button>
+        <Button
+          onClick={() => {
+            setValues([])
+          }}
+        >
+          Clear
+        </Button>
+      </ButtonGroup>
     </VStack>
   )
 }
@@ -270,20 +298,28 @@ const CheckBoxBuilder = ({ onAddGroup }) => {
   const [inputVal, setInputVal] = useState('')
   const [values, setValues] = useState([])
   const [selected, setSelected] = useState([])
+  const [isInvalid, setInvalid] = useState(false)
+  const [isLabelinvalid, setLabelInvalid] = useState(false)
+  const [required, setRequired] = useState(false)
 
   const handleAddVal = () => {
+    setLabelInvalid(false)
     if (values.includes(inputVal) || inputVal.trim() === '')
-      return alert('Nahi rayy')
+      return setInvalid(true)
     setValues(prev => [...prev, inputVal])
     selected === undefined && setSelected(inputVal)
     setInputVal('')
   }
 
   const handleAddGroup = () => {
+    setInvalid(false)
+    if (label.trim() === '') return setLabelInvalid(true)
+    if (values.length < 1) return setInvalid(true)
     onAddGroup({
       type: 'CheckboxGroup',
       label,
-      values
+      values,
+      required
     })
     setLabel('')
   }
@@ -291,17 +327,33 @@ const CheckBoxBuilder = ({ onAddGroup }) => {
   return (
     <VStack w="100%">
       <Input
+        isInvalid={isLabelinvalid}
         value={label}
-        onChange={e => setLabel(e.target.value)}
-        placeholder="Label"
+        onChange={e => {
+          setLabel(e.target.value)
+          setInvalid(false)
+        }}
+        onFocus={() => {
+          setInvalid(false)
+          setLabelInvalid(false)
+        }}
+        placeholder={isLabelinvalid ? 'Invalid Label!' : 'Label'}
         size="sm"
       />
 
       <HStack>
         <Input
+          isInvalid={isInvalid}
           value={inputVal}
-          onChange={e => setInputVal(e.target.value)}
-          placeholder="Add Checkbox"
+          onChange={e => {
+            setInputVal(e.target.value)
+            setInvalid(false)
+          }}
+          onFocus={() => {
+            setInvalid(false)
+            setLabelInvalid(false)
+          }}
+          placeholder={isInvalid ? 'Invalid Input!' : 'Add CheckBox'}
           size="sm"
         />
         <IconButton
@@ -322,18 +374,33 @@ const CheckBoxBuilder = ({ onAddGroup }) => {
               </Checkbox>
             ))}
           </Stack>
+          <HStack>
+            <Text color="#f00" fontSize={14}>
+              Mark Required
+            </Text>
+            <Checkbox onChange={() => setRequired(prev => !prev)} size="sm" />
+          </HStack>
           <Divider />
         </Box>
       )}
-      <Button
-        w="100%"
+      <ButtonGroup
+        width="100%"
         size="sm"
+        isAttached
         colorScheme="teal"
         variant="outline"
-        onClick={handleAddGroup}
       >
-        Add Group
-      </Button>
+        <Button w="80%" size="sm" onClick={handleAddGroup}>
+          Add Group
+        </Button>
+        <Button
+          onClick={() => {
+            setValues([])
+          }}
+        >
+          Clear
+        </Button>
+      </ButtonGroup>
     </VStack>
   )
 }
@@ -342,19 +409,27 @@ const SelectListBuilder = ({ onAddGroup }) => {
   const [label, setLabel] = useState('')
   const [inputVal, setInputVal] = useState('')
   const [values, setValues] = useState([])
+  const [isInvalid, setInvalid] = useState(false)
+  const [isLabelinvalid, setLabelInvalid] = useState(false)
+  const [required, setRequired] = useState(false)
 
   const handleAddVal = () => {
+    setLabelInvalid(false)
     if (values.includes(inputVal) || inputVal.trim() === '')
-      return alert('Nahi rayy')
+      return setInvalid(true)
     setValues(prev => [...prev, inputVal])
     setInputVal('')
   }
 
   const handleAddGroup = () => {
+    setInvalid(false)
+    if (label.trim() === '') return setLabelInvalid(true)
+    if (values.length < 1) return setInvalid(true)
     onAddGroup({
       type: 'SelectList',
       label,
-      values
+      values,
+      required
     })
     setLabel('')
   }
@@ -362,17 +437,33 @@ const SelectListBuilder = ({ onAddGroup }) => {
   return (
     <VStack w="100%">
       <Input
+        isInvalid={isLabelinvalid}
         value={label}
-        onChange={e => setLabel(e.target.value)}
-        placeholder="Label"
+        onChange={e => {
+          setLabel(e.target.value)
+          setInvalid(false)
+        }}
+        onFocus={() => {
+          setInvalid(false)
+          setLabelInvalid(false)
+        }}
+        placeholder={isLabelinvalid ? 'Invalid Label!' : 'Label'}
         size="sm"
       />
 
       <HStack>
         <Input
+          isInvalid={isInvalid}
           value={inputVal}
-          onChange={e => setInputVal(e.target.value)}
-          placeholder="Add List Item"
+          onChange={e => {
+            setInputVal(e.target.value)
+            setInvalid(false)
+          }}
+          onFocus={() => {
+            setInvalid(false)
+            setLabelInvalid(false)
+          }}
+          placeholder={isInvalid ? 'Invalid Input!' : 'Add Option'}
           size="sm"
         />
         <IconButton
@@ -391,50 +482,82 @@ const SelectListBuilder = ({ onAddGroup }) => {
               <option w="100%">{value}</option>
             ))}
           </Select>
+          <HStack>
+            <Text color="#f00" fontSize={14}>
+              Mark Required
+            </Text>
+            <Checkbox onChange={() => setRequired(prev => !prev)} size="sm" />
+          </HStack>
           <Divider />
         </>
       )}
-      <Button
-        w="100%"
+      <ButtonGroup
+        width="100%"
         size="sm"
+        isAttached
         colorScheme="teal"
         variant="outline"
-        onClick={handleAddGroup}
       >
-        Add Group
-      </Button>
+        <Button w="80%" size="sm" onClick={handleAddGroup}>
+          Add Group
+        </Button>
+        <Button
+          onClick={() => {
+            setValues([])
+          }}
+        >
+          Clear
+        </Button>
+      </ButtonGroup>
     </VStack>
   )
 }
 
 const DateBuilder = ({ onAddField }) => {
-  const [label, setLabel] = useState()
+  const [label, setLabel] = useState('')
+  const [isInvalid, setInvalid] = useState(false)
+  const [required, setRequired] = useState(false)
 
   const handleAddField = () => {
+    if (label.trim() === '') {
+      return setInvalid(true)
+    }
     onAddField({
       type: 'Date',
-      label: label
+      label: label,
+      required
     })
     setLabel('')
   }
 
   return (
-    <VStack>
+    <VStack w="100%">
+      <Input
+        isInvalid={isInvalid}
+        value={label}
+        onChange={e => {
+          setLabel(e.target.value)
+          setInvalid(false)
+        }}
+        onFocus={() => setInvalid(false)}
+        placeholder={isInvalid ? 'Invalid Input!' : 'Label'}
+        size="sm"
+      />
       <HStack>
-        <Input
-          value={label}
-          onChange={e => setLabel(e.target.value)}
-          placeholder="Label"
-          size="sm"
-        />
-        <IconButton
-          onClick={handleAddField}
-          icon={<AddIcon />}
-          size="sm"
-          variant="outline"
-          colorScheme="teal"
-        />
+        <Text color="#f00" fontSize={14}>
+          Mark Required
+        </Text>
+        <Checkbox onChange={() => setRequired(prev => !prev)} size="sm" />
       </HStack>
+      <Button
+        colorScheme="teal"
+        variant="outline"
+        w="100%"
+        size="sm"
+        onClick={handleAddField}
+      >
+        Add Field
+      </Button>
     </VStack>
   )
 }
