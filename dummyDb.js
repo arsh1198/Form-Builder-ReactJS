@@ -4,8 +4,7 @@ const data = {
       id: 1,
       forms: [
         {
-          'sample-form': {
-            id: 'form#1',
+          'form#1': {
             blocks: [
               {
                 type: 'Heading',

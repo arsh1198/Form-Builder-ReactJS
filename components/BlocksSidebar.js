@@ -22,7 +22,8 @@ import {
   Checkbox,
   Select,
   FormHelperText,
-  FormControl
+  FormControl,
+  Flex
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { useContext, useState } from 'react'
@@ -581,30 +582,38 @@ const MenuItem = ({ title, children }) => {
 const BlocksSidebar = () => {
   const { pushBlock } = useContext(BuilderContext)
   return (
-    <Box>
-      <VStack h="100%" p={4} borderRadius="lg">
-        <Accordion h="100%" w="100%" allowToggle>
-          <MenuItem title="Heading">
-            <HeadingBuilder onAddField={pushBlock} />
-          </MenuItem>
-          <MenuItem title="Input">
-            <InputBuilder onAddField={pushBlock} />
-          </MenuItem>
-          <MenuItem title="Radio Group">
-            <RadioGroupBuilder onAddGroup={pushBlock} />
-          </MenuItem>
-          <MenuItem title="Checkbox Group">
-            <CheckBoxBuilder onAddGroup={pushBlock} />
-          </MenuItem>
-          <MenuItem title="Select List">
-            <SelectListBuilder onAddGroup={pushBlock} />
-          </MenuItem>
-          <MenuItem title="Date">
-            <DateBuilder onAddField={pushBlock} />
-          </MenuItem>
-        </Accordion>
-      </VStack>
-    </Box>
+    <Flex h="100%" direction="column" justifyContent="space-between">
+      <Box p={4} flexGrow={1}>
+        <Box>
+          <Accordion h="100%" w="100%" allowToggle>
+            <MenuItem title="Heading">
+              <HeadingBuilder onAddField={pushBlock} />
+            </MenuItem>
+            <MenuItem title="Input">
+              <InputBuilder onAddField={pushBlock} />
+            </MenuItem>
+            <MenuItem title="Radio Group">
+              <RadioGroupBuilder onAddGroup={pushBlock} />
+            </MenuItem>
+            <MenuItem title="Checkbox Group">
+              <CheckBoxBuilder onAddGroup={pushBlock} />
+            </MenuItem>
+            <MenuItem title="Select List">
+              <SelectListBuilder onAddGroup={pushBlock} />
+            </MenuItem>
+            <MenuItem title="Date">
+              <DateBuilder onAddField={pushBlock} />
+            </MenuItem>
+          </Accordion>
+        </Box>
+      </Box>
+      <Box h={70} p={4}>
+        <Divider />
+        <Button colorScheme="teal" w="100%">
+          SAVE
+        </Button>
+      </Box>
+    </Flex>
   )
 }
 
