@@ -25,13 +25,15 @@ const BuilderProvider = ({ children }) => {
   const pushBlock = data => {
     dispatch({
       type: 'PUSH_BLOCK',
-      payload: data
+      payload: { ...data }
     })
   }
 
   const deleteBlock = index => {
     dispatch({ type: 'DELETE_BLOCK', payload: index })
   }
+
+  const pushForm = () => {}
 
   return (
     <BuilderContext.Provider value={{ pushBlock, deleteBlock, blocks }}>

@@ -28,6 +28,8 @@ import {
 import { AddIcon } from '@chakra-ui/icons'
 import { useContext, useState } from 'react'
 import { BuilderContext } from '../contexts/builderContext'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 
 function RadioCard(props) {
   const { getInputProps, getCheckboxProps } = useRadio(props)
@@ -580,9 +582,14 @@ const MenuItem = ({ title, children }) => {
 }
 
 const BlocksSidebar = () => {
-  const { pushBlock } = useContext(BuilderContext)
+  const { pushBlock, blocks } = useContext(BuilderContext)
   return (
-    <Flex h="100%" direction="column" justifyContent="space-between">
+    <Flex
+      borderLeftWidth={3}
+      h="100%"
+      direction="column"
+      justifyContent="space-between"
+    >
       <Box p={4} flexGrow={1}>
         <Box>
           <Accordion h="100%" w="100%" allowToggle>

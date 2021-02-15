@@ -23,7 +23,6 @@ function getBlocks(blocksArr) {
 
 export default function Builder() {
   const { blocks } = useContext(BuilderContext)
-  console.log('chittad => ', blocks)
   return (
     <Box h="100vh">
       <Flex h="100%" borderWidth={2}>
