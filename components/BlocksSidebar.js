@@ -30,6 +30,16 @@ import { useContext, useState } from 'react'
 import { BuilderContext } from '../contexts/builderContext'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import { useAuth } from '../contexts/authContext'
+
+const collection = item => firebase.firestore().collection(item)
+
+const pushForm = async (form, user) => {
+  await collection('users').doc(user.uid).collection('forms').doc().set({
+    form,
+    created_at: new Date()
+  })
+}
 
 function RadioCard(props) {
   const { getInputProps, getCheckboxProps } = useRadio(props)
@@ -583,6 +593,7 @@ const MenuItem = ({ title, children }) => {
 
 const BlocksSidebar = () => {
   const { pushBlock, blocks } = useContext(BuilderContext)
+  const { user } = useAuth()
   return (
     <Flex
       borderLeftWidth={3}
@@ -616,7 +627,16 @@ const BlocksSidebar = () => {
       </Box>
       <Box h={70} p={4}>
         <Divider />
-        <Button colorScheme="teal" w="100%">
+        <Button
+          colorScheme="teal"
+          w="100%"
+          onClick={() => {
+            if (blocks)
+              pushForm(blocks, user).then(function () {
+                alert('Done!')
+              })
+          }}
+        >
           SAVE
         </Button>
       </Box>

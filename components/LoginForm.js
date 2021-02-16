@@ -21,7 +21,7 @@ export default function LoginForm({ mode }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const { setUser, user } = useAuth()
+  const { user, setUser } = useAuth()
   const db = firebase.firestore()
   const router = useRouter()
 
@@ -30,12 +30,15 @@ export default function LoginForm({ mode }) {
     await firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(async function () {
+      .then(async function (res) {
+        console.log(res)
         setLoading(false)
+        setUser(res.user)
         await db
           .collection('users')
-          .add({
-            email: user.email,
+          .doc(res.user.uid)
+          .set({
+            email: res.user.email,
             created: new Date()
           })
           .then(function () {
@@ -68,10 +71,12 @@ export default function LoginForm({ mode }) {
 
   const signIn = async () => {
     setLoading(true)
+
     await firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(function () {
+      .then(function (res) {
+        setUser(res.user)
         setLoading(false)
         router.push('/home')
       })
