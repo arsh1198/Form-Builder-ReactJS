@@ -7,25 +7,58 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  Link
+  Text,
+  Heading,
+  useToast
 } from '@chakra-ui/react'
+import { useHistory } from 'react-router-dom'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { useState } from 'react'
 
-const ShareModal = ({ link, isOpen, onClose }) => {
+const ShareModal = ({ link, isOpen, onClose, navigateTo }) => {
+  const history = useHistory()
+  const toast = useToast()
   return (
-    <Modal isOpen={isOpen} closeOnOverlayClick={false} closeOnEsc={false}>
+    <Modal
+      onClose={onClose}
+      isOpen={isOpen}
+      closeOnOverlayClick={false}
+      closeOnEsc={false}
+    >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Form Saved!</ModalHeader>
+        <ModalHeader>
+          <Heading size="md">Form Saved</Heading>
+        </ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
-          <Link>{link}</Link>
+        <ModalBody
+          bg="#E6FFFA"
+          borderWidth={2}
+          mx={4}
+          borderRadius="lg"
+          borderColor="#008080"
+        >
+          <Text fontWeight="bold">{link}</Text>
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClose}>
-            Close
-          </Button>
-          <Button variant="ghost">Secondary Action</Button>
+          <CopyToClipboard
+            text={link}
+            onCopy={() => {
+              toast({
+                title: 'Link Copied',
+                description: 'You can now Share the link',
+                status: 'success',
+                duration: 4000,
+                isClosable: true
+              })
+            }}
+          >
+            <Button colorScheme="teal" mr={3}>
+              Copy Link
+            </Button>
+          </CopyToClipboard>
+          <Button onClick={() => history.replace(navigateTo)}>Done</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

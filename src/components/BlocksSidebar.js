@@ -25,7 +25,7 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
-import { useContext, useState } from 'react'
+import { useContext, useRef, useState } from 'react'
 import { BuilderContext } from '../contexts/builderContext'
 import 'firebase/firestore'
 import ShareModal from './ShareModal'
@@ -639,6 +639,7 @@ const BlocksSidebar = () => {
         isOpen={isOpen}
         onClose={onClose}
         link={`localhost:3000/form/${id}`}
+        navigateTo="/"
       />
     </Flex>
   )
