@@ -13,7 +13,6 @@ import {
 } from '@chakra-ui/react'
 import { useHistory } from 'react-router-dom'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { useState } from 'react'
 
 const ShareModal = ({ link, isOpen, onClose, navigateTo }) => {
   const history = useHistory()

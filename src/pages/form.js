@@ -6,6 +6,7 @@ import 'firebase/firestore'
 import { useCallback, useEffect, useState } from 'react'
 import { useAuth } from '../contexts/authContext'
 import { useParams } from 'react-router'
+import Loading from '../components/Loading'
 
 function getBlocks(blocksArr) {
   return blocksArr.map((data, index) => {
@@ -43,20 +44,24 @@ export default function Form() {
     [user.uid]
   )
 
+  const pushResponse = () => {}
+
   useEffect(() => {
     fetchForm(id)
   }, [fetchForm, id])
 
-  return (
+  return blocks.length > 0 ? (
     <Center>
       <Box
-        bg="#E6FFFA"
+        my={4}
         borderWidth={1}
         borderColor="#008080"
-        borderRadius="lg"
+        bg="#E6FFFA"
         p={4}
-        my={4}
-        maxWidth="40rem"
+        minW="30%"
+        maxW="70%"
+        boxShadow="sm"
+        borderRadius="lg"
       >
         <form>
           <List spacing={2}>{getBlocks(blocks)}</List>
@@ -66,5 +71,7 @@ export default function Form() {
         </form>
       </Box>
     </Center>
+  ) : (
+    <Loading />
   )
 }
