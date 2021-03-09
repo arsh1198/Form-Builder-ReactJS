@@ -75,6 +75,7 @@ export default function LoginForm() {
   const { from } = location.state || { from: { pathname: '/' } }
 
   const signUp = async () => {
+    console.log('signing Up!')
     setLoading(true)
     await firebase
       .auth()
@@ -202,7 +203,7 @@ export default function LoginForm() {
               variant="outline"
               borderWidth="2px"
               isLoading={loading}
-              onClick={signUpMode === 'Sign Up' ? signUp : signIn}
+              onClick={signUpMode ? signUp : signIn}
             >
               <AnimatedText text={signUpMode ? 'Sign Up' : 'Sign In'} />
             </Button>
@@ -217,6 +218,7 @@ export default function LoginForm() {
             />
             <Link
               onClick={() => {
+                console.log(signUpMode)
                 setSignUp(prev => !prev)
               }}
               fontWeight="bold"

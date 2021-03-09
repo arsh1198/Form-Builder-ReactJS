@@ -29,6 +29,7 @@ import { useContext, useState } from 'react'
 import { BuilderContext } from '../contexts/builderContext'
 import 'firebase/firestore'
 import ShareModal from './ShareModal'
+import { useAuth } from '../contexts/authContext'
 
 function RadioCard(props) {
   const { getInputProps, getCheckboxProps } = useRadio(props)
@@ -582,6 +583,7 @@ const MenuItem = ({ title, children }) => {
 
 const BlocksSidebar = () => {
   const { pushBlock, pushForm, blocks, id } = useContext(BuilderContext)
+  const { user } = useAuth()
   const [loading, setLoading] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -592,7 +594,7 @@ const BlocksSidebar = () => {
       direction="column"
       justifyContent="space-between"
     >
-      <Box p={4} flexGrow={1}>
+      <Box p={4}>
         <Box>
           <Accordion h="100%" w="100%" allowToggle>
             <MenuItem title="Heading">
@@ -638,7 +640,7 @@ const BlocksSidebar = () => {
       <ShareModal
         isOpen={isOpen}
         onClose={onClose}
-        link={`localhost:3000/form/${id}`}
+        link={`localhost:3000/form/u/${user.uid}/${id}`}
         navigateTo="/"
       />
     </Flex>

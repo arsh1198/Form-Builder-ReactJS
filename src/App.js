@@ -1,9 +1,9 @@
 import { Route, Switch } from 'react-router-dom'
 import Home from './pages/home'
 import Login from './pages/login'
-import Builder from './pages/builder'
-import Form from './pages/form'
 import ProtectedRoute from './components/ProtectedRoute'
+import ViewForm from './pages/viewForm'
+import ReviewForm from './pages/reviewForm'
 
 export default function App() {
   return (
@@ -15,10 +15,10 @@ export default function App() {
         <Login />
       </Route>
       <ProtectedRoute path="/builder">
-        <Builder />
+        <ReviewForm />
       </ProtectedRoute>
-      <ProtectedRoute path="/form/:id">
-        <Form />
+      <ProtectedRoute path="/form/u/:userId/:formId">
+        <ViewForm />
       </ProtectedRoute>
     </Switch>
   )

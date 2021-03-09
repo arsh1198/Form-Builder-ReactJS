@@ -1,7 +1,7 @@
 import { Box, Center, Flex, List, ListItem, Text } from '@chakra-ui/react'
-import BlocksSidebar from '../components/BlocksSidebar'
+import BlocksSidebar from './BlocksSidebar'
 import { BuilderContext } from '../contexts/builderContext'
-import Block from '../components/Block'
+import Block from './Block'
 import { useContext } from 'react'
 
 export default function Builder() {
@@ -24,8 +24,8 @@ export default function Builder() {
   }
 
   return (
-    <Box h="100vh">
-      <Flex h="100%" borderWidth={2}>
+    <Box height="100%">
+      <Flex h="100%">
         <Box flexGrow={1} overflowY="auto">
           <Center>
             <Box
