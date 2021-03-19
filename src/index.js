@@ -6,17 +6,20 @@ import './styles/globals.css'
 import { ChakraProvider } from '@chakra-ui/react'
 import BuilderProvider from './contexts/builderContext'
 import { AuthProvider } from './contexts/authContext'
+import { HistoryListener } from 'react-router-navigation-confirm'
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <ChakraProvider>
-        <AuthProvider>
-          <BuilderProvider>
-            <App />
-          </BuilderProvider>
-        </AuthProvider>
-      </ChakraProvider>
+      <HistoryListener>
+        <ChakraProvider>
+          <AuthProvider>
+            <BuilderProvider>
+              <App />
+            </BuilderProvider>
+          </AuthProvider>
+        </ChakraProvider>
+      </HistoryListener>
     </Router>
   </React.StrictMode>,
   document.getElementById('root')

@@ -1,69 +1,65 @@
-import { Box, Center, Flex, List, ListItem, Text } from '@chakra-ui/react'
+import { Box, Center, Flex, List, ListItem } from '@chakra-ui/react'
 import BlocksSidebar from './BlocksSidebar'
 import { BuilderContext } from '../contexts/builderContext'
 import Block from './Block'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
+import { useParams } from 'react-router'
+import Loading from './Loading'
 
 export default function Builder() {
-  const { blocks, deleteBlock } = useContext(BuilderContext)
+  const { blocks, deleteBlock, getForm, loading } = useContext(BuilderContext)
+  const { formId } = useParams()
+
+  useEffect(() => {
+    if (formId) getForm(formId)
+  }, [formId, getForm])
 
   function getBlocks(blocksArr) {
-    return blocksArr.map((data, index) => {
-      return (
-        <ListItem>
-          <Block
-            data={data}
-            deleteable
-            onDelete={() => {
-              deleteBlock(index)
-            }}
-          />
-        </ListItem>
-      )
-    })
+    if (blocksArr) {
+      return blocksArr.map((data, index) => {
+        return (
+          <ListItem>
+            <Block
+              data={data}
+              deleteable={data.type !== 'Title'}
+              onDelete={() => {
+                deleteBlock(index)
+              }}
+            />
+          </ListItem>
+        )
+      })
+    }
   }
 
   return (
-    <Box height="100%">
-      <Flex h="100%">
-        <Box flexGrow={1} overflowY="auto">
+    <Box height="100%" width="100%">
+      <Flex height="100%" width="100%">
+        <Box height="100%" flexGrow={1} overflowY="auto">
           <Center>
-            <Box
-              my={4}
-              borderWidth={1}
-              borderColor="#008080"
-              bg="#E6FFFA"
-              p={4}
-              minW="30%"
-              maxW="70%"
-              boxShadow="sm"
-              borderRadius="lg"
-            >
-              {blocks.length === 0 ? (
-                <Center>
-                  <Text
-                    boxShadow="lg"
-                    color="#008080"
-                    p={4}
-                    bg="#fff"
-                    borderRadius="md"
-                    fontWeight="bold"
-                    borderWidth={1}
-                    borderColor="#008080"
-                  >
-                    You Need to Add Some Form Controls!
-                  </Text>
-                </Center>
-              ) : (
+            {loading ? (
+              <Loading />
+            ) : (
+              <Box
+                my={4}
+                borderWidth={1}
+                borderColor="#008080"
+                bg="#E6FFFA"
+                p={4}
+                minW="30%"
+                maxW="70%"
+                boxShadow="sm"
+                borderRadius="lg"
+              >
                 <form>
                   <List spacing={2}>{getBlocks(blocks)}</List>
                 </form>
-              )}
-            </Box>
+              </Box>
+            )}
           </Center>
         </Box>
         <Box overflowY="auto" boxShadow="lg" h="100%" w="18rem">
-          <BlocksSidebar />
+          <BlocksSidebar id={formId} />
         </Box>
       </Flex>
     </Box>

@@ -1,6 +1,6 @@
 import { Heading } from '@chakra-ui/react'
 
-const HeadingBlock = ({ value }) => {
+const TitleBlock = ({ value }) => {
   return (
     <Heading
       py={1}
@@ -9,7 +9,7 @@ const HeadingBlock = ({ value }) => {
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap'
       }}
-      size="md"
+      size="lg"
       title={value}
     >
       {value}
@@ -17,4 +17,4 @@ const HeadingBlock = ({ value }) => {
   )
 }
 
-export default HeadingBlock
+export default TitleBlock

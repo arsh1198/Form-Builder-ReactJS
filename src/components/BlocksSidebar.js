@@ -21,15 +21,12 @@ import {
   Checkbox,
   Select,
   FormControl,
-  Flex,
-  useDisclosure
+  Flex
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { useContext, useState } from 'react'
 import { BuilderContext } from '../contexts/builderContext'
 import 'firebase/firestore'
-import ShareModal from './ShareModal'
-import { useAuth } from '../contexts/authContext'
 
 function RadioCard(props) {
   const { getInputProps, getCheckboxProps } = useRadio(props)
@@ -582,10 +579,8 @@ const MenuItem = ({ title, children }) => {
 }
 
 const BlocksSidebar = () => {
-  const { pushBlock, pushForm, blocks, id } = useContext(BuilderContext)
-  const { user } = useAuth()
+  const { pushBlock, pushForm, blocks } = useContext(BuilderContext)
   const [loading, setLoading] = useState(false)
-  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <Flex
@@ -629,7 +624,6 @@ const BlocksSidebar = () => {
               setLoading(true)
               pushForm(blocks).then(() => {
                 setLoading(false)
-                onOpen()
               })
             }}
           >
@@ -637,12 +631,6 @@ const BlocksSidebar = () => {
           </Button>
         </Box>
       ) : null}
-      <ShareModal
-        isOpen={isOpen}
-        onClose={onClose}
-        link={`localhost:3000/form/u/${user.uid}/${id}`}
-        navigateTo="/"
-      />
     </Flex>
   )
 }

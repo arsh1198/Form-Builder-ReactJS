@@ -6,9 +6,12 @@ import RadioBlock from './blocks/RadioBlock'
 import SelectListBlock from './blocks/SelectListBlock'
 import { CloseIcon } from '@chakra-ui/icons'
 import DateBlock from './blocks/DateBlock'
+import TitleBlock from './blocks/TitleBlock'
 
 function getBlock(data) {
   switch (data.type) {
+    case 'Title':
+      return <TitleBlock value={data.value} />
     case 'Heading':
       return <HeadingBlock value={data.value} />
     case 'Input':

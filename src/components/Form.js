@@ -22,7 +22,12 @@ export default function Form({ blocks }) {
         boxShadow="sm"
         borderRadius="lg"
       >
-        <form>
+        <form
+          onSubmit={e => {
+            e.preventDefault()
+            console.log(e.target.value)
+          }}
+        >
           <List spacing={2}>{getBlocks(blocks)}</List>
           <Button float="right" mt={4} colorScheme="teal" type="submit">
             Submit

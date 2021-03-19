@@ -14,7 +14,7 @@ export default function App() {
       <Route path="/login">
         <Login />
       </Route>
-      <ProtectedRoute path="/builder">
+      <ProtectedRoute path="/builder/:formId?">
         <ReviewForm />
       </ProtectedRoute>
       <ProtectedRoute path="/form/u/:userId/:formId">
