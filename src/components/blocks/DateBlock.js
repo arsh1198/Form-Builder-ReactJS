@@ -5,6 +5,7 @@ const DateBlock = ({ label, required }) => {
     <FormControl isRequired={required}>
       <FormLabel>{label}</FormLabel>
       <input
+        name={label}
         style={{
           width: '100%',
           paddingTop: 6,

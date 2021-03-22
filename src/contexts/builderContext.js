@@ -59,7 +59,7 @@ const BuilderProvider = ({ children }) => {
       .doc()
     const formId = formsCollection.id
     dispatch({ type: 'PUSH_FORM', payload: formId })
-    if (blocks.length > 0) {
+    if (form.length > 0) {
       await formsCollection
         .set({
           _id: formId,
@@ -75,6 +75,25 @@ const BuilderProvider = ({ children }) => {
     }
   }
 
+  const updateForm = async (form, formId) => {
+    const formDoc = firebase
+      .firestore()
+      .collection('users')
+      .doc(user.uid)
+      .collection('forms')
+      .doc(formId)
+
+    dispatch({ type: 'PUSH_FORM', payload: formId })
+    if (blocks.length > 0) {
+      await formDoc
+        .update({
+          form
+        })
+        .catch(error => {
+          alert(error.message)
+        })
+    }
+  }
   const getForm = useCallback(
     async id => {
       if (user) {
@@ -107,6 +126,7 @@ const BuilderProvider = ({ children }) => {
         pushBlock,
         deleteBlock,
         pushForm,
+        updateForm,
         blocks,
         id,
         getForm,

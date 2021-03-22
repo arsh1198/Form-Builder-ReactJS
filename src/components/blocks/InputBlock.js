@@ -4,7 +4,12 @@ const InputBlock = ({ label, placeholder, inputType, required }) => {
   return (
     <FormControl isRequired={required}>
       <FormLabel>{label}</FormLabel>
-      <Input type={inputType} size="sm" placeholder={placeholder}></Input>
+      <Input
+        name={label}
+        type={inputType}
+        size="sm"
+        placeholder={placeholder}
+      ></Input>
     </FormControl>
   )
 }

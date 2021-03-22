@@ -27,6 +27,7 @@ import { AddIcon } from '@chakra-ui/icons'
 import { useContext, useState } from 'react'
 import { BuilderContext } from '../contexts/builderContext'
 import 'firebase/firestore'
+import { useParams } from 'react-router'
 
 function RadioCard(props) {
   const { getInputProps, getCheckboxProps } = useRadio(props)
@@ -579,8 +580,9 @@ const MenuItem = ({ title, children }) => {
 }
 
 const BlocksSidebar = () => {
-  const { pushBlock, pushForm, blocks } = useContext(BuilderContext)
+  const { pushBlock, updateForm, blocks } = useContext(BuilderContext)
   const [loading, setLoading] = useState(false)
+  const { formId } = useParams()
 
   return (
     <Flex
@@ -622,7 +624,7 @@ const BlocksSidebar = () => {
             w="100%"
             onClick={() => {
               setLoading(true)
-              pushForm(blocks).then(() => {
+              updateForm(blocks, formId).then(() => {
                 setLoading(false)
               })
             }}

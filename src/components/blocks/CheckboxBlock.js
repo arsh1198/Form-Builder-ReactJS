@@ -6,9 +6,11 @@ import {
   FormControl
 } from '@chakra-ui/react'
 
-const getCheckBox = values => {
+const getCheckBox = (values, label) => {
   return values.map(text => (
-    <Checkbox value={text.toLowerCase()}>{text}</Checkbox>
+    <Checkbox name={label} value={text.toLowerCase()}>
+      {text}
+    </Checkbox>
   ))
 }
 
@@ -18,7 +20,7 @@ const CheckboxBlock = ({ label, values, required }) => {
       <FormLabel>{label}</FormLabel>
       <CheckboxGroup>
         <HStack spacing={4} mt={4}>
-          {getCheckBox(values)}
+          {getCheckBox(values, label)}
         </HStack>
       </CheckboxGroup>
     </FormControl>

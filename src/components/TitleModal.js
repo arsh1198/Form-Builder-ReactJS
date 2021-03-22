@@ -12,13 +12,16 @@ import {
   Input
 } from '@chakra-ui/react'
 import { useContext, useState } from 'react'
-import { useHistory } from 'react-router-dom'
 import { BuilderContext } from '../contexts/builderContext'
 
-const TitleModal = ({ isOpen, onClose, navigateTo }) => {
-  const history = useHistory()
+const TitleModal = ({ isOpen, onClose }) => {
   const [formTitle, setFormTitle] = useState('')
-  const { pushBlock } = useContext(BuilderContext)
+  const { pushForm } = useContext(BuilderContext)
+
+  const handleCreateNewForm = () => {
+    pushForm([{ type: 'Title', value: formTitle }])
+  }
+
   return (
     <Modal
       onClose={onClose}
@@ -45,10 +48,7 @@ const TitleModal = ({ isOpen, onClose, navigateTo }) => {
         <ModalFooter>
           <Button
             disabled={formTitle.length < 1}
-            onClick={() => {
-              history.push(navigateTo)
-              pushBlock({ type: 'Title', value: formTitle })
-            }}
+            onClick={handleCreateNewForm}
             colorScheme="teal"
             mr={3}
           >

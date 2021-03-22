@@ -47,7 +47,7 @@ const Home = () => {
           Logout
         </Button>
       </Stack>
-      <TitleModal isOpen={isOpen} onClose={onClose} navigateTo="/builder" />
+      <TitleModal isOpen={isOpen} onClose={onClose} />
     </Flex>
   ) : (
     <Loading />

@@ -6,9 +6,11 @@ import {
   FormControl
 } from '@chakra-ui/react'
 
-function getRadio(values) {
+function getRadio(values, label) {
   return values.map((text, index) => (
-    <Radio value={`${index + 1}`}>{text}</Radio>
+    <Radio name={label} value={`${index + 1}`}>
+      {text}
+    </Radio>
   ))
 }
 
@@ -17,7 +19,7 @@ const RadioBlock = ({ label, values, selected, required }) => {
     <FormControl isRequired={required}>
       <FormLabel>{label}</FormLabel>
       <RadioGroup mt={4} defaultValue={`${selected + 1}`}>
-        <Stack>{getRadio(values)}</Stack>
+        <Stack>{getRadio(values, label)}</Stack>
       </RadioGroup>
     </FormControl>
   )
