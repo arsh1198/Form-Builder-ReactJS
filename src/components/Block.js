@@ -81,7 +81,7 @@ const Block = ({ data, deleteable, onDelete }) => {
               <IconButton
                 onClick={onDelete}
                 zIndex={1}
-                bg="#ff5252"
+                colorScheme="red"
                 size="xs"
                 icon={<CloseIcon color="white" />}
               />
@@ -93,9 +93,9 @@ const Block = ({ data, deleteable, onDelete }) => {
               <IconButton
                 onClick={onDelete}
                 zIndex={1}
-                bg="#ff5252"
+                colorScheme="red"
                 size="xs"
-                icon={<CloseIcon color="white" />}
+                icon={<CloseIcon color="white" fontSize={10} />}
                 style={{ position: 'absolute', right: 20 }}
               />
             </Tooltip>

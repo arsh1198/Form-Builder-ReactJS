@@ -57,7 +57,17 @@ const ShareModal = ({ link, isOpen, onClose, navigateTo }) => {
               Copy Link
             </Button>
           </CopyToClipboard>
-          <Button onClick={() => history.replace(navigateTo)}>Done</Button>
+          <Button
+            onClick={
+              navigateTo
+                ? () => {
+                    history.push(navigateTo)
+                  }
+                : onClose
+            }
+          >
+            Done
+          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

@@ -38,7 +38,7 @@ const ViewForm = () => {
     fetchForm(formId)
   }, [fetchForm, formId])
 
-  return <Form blocks={blocks} />
+  return <Form blocks={blocks} id={formId} />
 }
 
 export default ViewForm

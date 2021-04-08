@@ -7,8 +7,8 @@ import {
 } from '@chakra-ui/react'
 
 function getRadio(values, label) {
-  return values.map((text, index) => (
-    <Radio name={label} value={`${index + 1}`}>
+  return values.map(text => (
+    <Radio name={label} value={text}>
       {text}
     </Radio>
   ))

@@ -197,6 +197,7 @@ export default function LoginForm() {
             </Box>
 
             <Button
+              type="submit"
               mt={8}
               w="full"
               colorScheme="teal"

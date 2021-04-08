@@ -21,7 +21,8 @@ import {
   Checkbox,
   Select,
   FormControl,
-  Flex
+  Flex,
+  useToast
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { useContext, useState } from 'react'
@@ -583,6 +584,7 @@ const BlocksSidebar = () => {
   const { pushBlock, updateForm, blocks } = useContext(BuilderContext)
   const [loading, setLoading] = useState(false)
   const { formId } = useParams()
+  const toast = useToast()
 
   return (
     <Flex
@@ -626,6 +628,13 @@ const BlocksSidebar = () => {
               setLoading(true)
               updateForm(blocks, formId).then(() => {
                 setLoading(false)
+                toast({
+                  title: 'Form Updated!',
+                  description: 'Your Changes has been saved.',
+                  status: 'success',
+                  duration: 4000,
+                  isClosable: true
+                })
               })
             }}
           >
