@@ -9,6 +9,7 @@ const FormList = ({ formIDs }) => {
         {formIDs
           ? formIDs.map(id => (
               <Box
+                key={id}
                 onClick={() => {
                   history.push(`/builder/${id}`)
                 }}

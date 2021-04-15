@@ -13,31 +13,28 @@ import { FaShare } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
 import ShareModal from './ShareModal'
 import { useAuth } from '../contexts/authContext'
-import { useHistory, useParams } from 'react-router'
+import { useParams } from 'react-router'
 import Responses from './Responses'
-import firebase from 'firebase/app'
+import DelConfirm from './DelConfirm'
+import { useContext } from 'react'
+import { BuilderContext } from '../contexts/builderContext'
 
-const handleDelete = (userId, formId) => {
-  firebase
-    .firestore()
-    .collection('users')
-    .doc(userId)
-    .collection('forms')
-    .doc(formId)
-    .delete()
-    .then(() => {
-      console.log(`${formId} deleted!`)
-    })
-    .catch(error => {
-      console.log(error.message)
-    })
-}
-
-const FormTabs = () => {
+const FormTabs = ({ deletedRef }) => {
   const { user } = useAuth()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    isOpen: isOpenShare,
+    onOpen: onOpenShare,
+    onClose: onCloseShare
+  } = useDisclosure()
+  const {
+    isOpen: isOpenDelete,
+    onOpen: onOpenDelete,
+    onClose: onCloseDelete
+  } = useDisclosure()
   const { formId } = useParams()
-  const history = useHistory()
+
+  const { deleteForm } = useContext(BuilderContext)
+
   return (
     <Tabs colorScheme="teal" h="100vh">
       <Flex h="100%" direction="column">
@@ -47,7 +44,7 @@ const FormTabs = () => {
           {formId ? (
             <>
               <Button
-                onClick={onOpen}
+                onClick={onOpenShare}
                 leftIcon={<FaShare />}
                 colorScheme="teal"
                 mr="3"
@@ -58,10 +55,7 @@ const FormTabs = () => {
                 Share
               </Button>
               <Button
-                onClick={() => {
-                  handleDelete(user.uid, formId)
-                  history.replace('/')
-                }}
+                onClick={onOpenDelete}
                 leftIcon={<MdDelete size={18} />}
                 colorScheme="red"
                 mr="3"
@@ -85,9 +79,15 @@ const FormTabs = () => {
         </TabPanels>
       </Flex>
       <ShareModal
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isOpenShare}
+        onClose={onCloseShare}
         link={`localhost:3000/form/u/${user.uid}/${formId}`}
+      />
+      <DelConfirm
+        isDeleted={deletedRef}
+        isOpen={isOpenDelete}
+        onClose={onCloseDelete}
+        handleDelete={deleteForm}
       />
     </Tabs>
   )

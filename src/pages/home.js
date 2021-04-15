@@ -7,6 +7,7 @@ import Loading from '../components/Loading'
 import FormList from '../components/FormList'
 import { useEffect, useState } from 'react'
 import TitleModal from '../components/TitleModal'
+import Header from '../components/Header'
 
 const getUserForms = async uid => {
   const formsRef = firebase
@@ -16,7 +17,6 @@ const getUserForms = async uid => {
     .collection('forms')
   return formsRef.get().then(snapshot =>
     snapshot.docs.map(({ id }) => {
-      console.log(id)
       return id
     })
   )
@@ -30,25 +30,20 @@ const Home = () => {
 
   useEffect(() => {
     getUserForms(user.uid).then(ids => setFormIds(ids))
-  }, [user.uid])
+  }, [])
 
   return user.email ? (
-    <Flex justifyContent="center" alignItems="center" h="100vh" w="100%">
-      <Stack w="100">
-        <FormList formIDs={formIds} />
-        <Text> {user ? user.email : 'Not Found'}</Text>
-        <Button onClick={onOpen}>Create a Form</Button>
-        <Button
-          onClick={async () => {
-            await firebase.auth().signOut()
-            history.replace('/login')
-          }}
-        >
-          Logout
-        </Button>
-      </Stack>
-      <TitleModal isOpen={isOpen} onClose={onClose} />
-    </Flex>
+    <Header>
+      <Flex justifyContent="center" alignItems="center" h="100%" w="100%">
+        <Stack w="100">
+          <FormList formIDs={formIds} />
+          <Text> {user ? user.email : 'Not Found'}</Text>
+          <Button onClick={onOpen}>Create a Form</Button>
+          <Button>Logout</Button>
+        </Stack>
+        <TitleModal isOpen={isOpen} onClose={onClose} />
+      </Flex>
+    </Header>
   ) : (
     <Loading />
   )

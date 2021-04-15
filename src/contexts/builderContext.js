@@ -9,7 +9,8 @@ export const BuilderContext = createContext()
 const initialState = {
   blocks: [],
   id: '',
-  loading: false
+  loading: false,
+  deleted: false
 }
 
 const reducer = (state, action) => {
@@ -18,7 +19,7 @@ const reducer = (state, action) => {
       return { ...state, blocks: [...state.blocks, action.payload] }
     case 'DELETE_BLOCK':
       const tempData = [...state.blocks]
-      tempData.splice(action.payload, 1)
+      tempData.splice(action.payload, 1) //removing the submit button
       return { ...state, blocks: tempData }
     case 'PUSH_FORM':
       return { ...state, id: action.payload }
@@ -28,6 +29,8 @@ const reducer = (state, action) => {
       return { ...state, blocks: [] }
     case 'SET_LOADING':
       return { ...state, loading: action.payload }
+    case 'DELETE_FORM':
+      return { ...state, deleted: action.payload }
     default:
       return state
   }
@@ -36,7 +39,7 @@ const reducer = (state, action) => {
 const BuilderProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
   const { user } = useAuth()
-  const { blocks, id, loading } = state
+  const { blocks, id, loading, deleted } = state
   const history = useHistory()
 
   const pushBlock = data => {
@@ -83,17 +86,37 @@ const BuilderProvider = ({ children }) => {
       .collection('forms')
       .doc(formId)
 
-    dispatch({ type: 'PUSH_FORM', payload: formId })
     if (blocks.length > 0) {
       await formDoc
         .update({
           form
+        })
+        .then(() => {
+          dispatch({ type: 'PUSH_FORM', payload: formId })
         })
         .catch(error => {
           alert(error.message)
         })
     }
   }
+
+  const deleteForm = async formId => {
+    firebase
+      .firestore()
+      .collection('users')
+      .doc(user.uid)
+      .collection('forms')
+      .doc(formId)
+      .delete()
+      .then(() => {
+        console.log(`${formId} deleted!`)
+        dispatch({ type: 'DELETE_FORM', payload: true })
+      })
+      .catch(error => {
+        console.log(error.message)
+      })
+  }
+
   const getForm = useCallback(
     async id => {
       if (user) {
@@ -130,8 +153,10 @@ const BuilderProvider = ({ children }) => {
         blocks,
         id,
         getForm,
+        deleteForm,
         clearBlocks,
-        loading
+        loading,
+        deleted
       }}
     >
       {children}
