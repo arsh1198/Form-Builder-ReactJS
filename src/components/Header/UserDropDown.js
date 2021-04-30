@@ -18,8 +18,15 @@ const UserDropDown = ({ userName }) => {
         <MenuItem>Profile</MenuItem>
         <MenuItem
           onClick={async () => {
-            await firebase.auth().signOut()
-            history.replace('/login')
+            await firebase
+              .auth()
+              .signOut()
+              .then(() => {
+                history.replace('/login')
+              })
+              .catch(error => {
+                throw error
+              })
           }}
         >
           Logout

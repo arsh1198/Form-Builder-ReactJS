@@ -1,12 +1,21 @@
 import { Box, Flex } from '@chakra-ui/layout'
 import Logo from './Logo'
 import UserDropDown from './UserDropDown'
+import { useAuth } from '../../contexts/authContext'
 
-const Header = ({ children }) => {
+const Header = props => {
+  const { localUser } = useAuth()
   return (
-    <Box height="100vh" width="100vw" overflowX="auto" overflowY="hidden">
+    <Box
+      {...props}
+      height="100vh"
+      width="100vw"
+      overflowX="auto"
+      overflowY="hidden"
+    >
       <nav>
         <Flex
+          boxShadow="md"
           px="4"
           direction="row"
           background="#008080"
@@ -16,10 +25,10 @@ const Header = ({ children }) => {
           justifyContent="space-between"
         >
           <Logo size={35} />
-          <UserDropDown userName="Baloongda" />
+          <UserDropDown userName={localUser.displayName} />
         </Flex>
       </nav>
-      {children}
+      {props.children}
     </Box>
   )
 }

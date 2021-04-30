@@ -1,24 +1,25 @@
-import { Box, Flex, HStack } from '@chakra-ui/layout'
-import { useHistory } from 'react-router-dom'
+import Card from './Card'
+import { BsFillPlusSquareFill } from 'react-icons/bs'
+import { useHistory } from 'react-router'
+import { Flex } from '@chakra-ui/layout'
 
-const FormList = ({ formIDs }) => {
+const FormList = props => {
   const history = useHistory()
+
+  const handleClick = id => {
+    history.push(`/builder/${id}`)
+  }
+
   return (
-    <Flex width="500px" overflowX="auto">
-      <HStack>
-        {formIDs
-          ? formIDs.map(id => (
-              <Box
-                key={id}
-                onClick={() => {
-                  history.push(`/builder/${id}`)
-                }}
-              >
-                {id}
-              </Box>
-            ))
-          : null}
-      </HStack>
+    <Flex {...props}>
+      <Card onClick={props.modalTrigger}>
+        <BsFillPlusSquareFill style={{ marginRight: 8 }} /> Create a Test
+      </Card>
+      {props.formIDs
+        ? props.formIDs?.map(id => (
+            <Card onClick={() => handleClick(id)}>{id}</Card>
+          ))
+        : null}
     </Flex>
   )
 }

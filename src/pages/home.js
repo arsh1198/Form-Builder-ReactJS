@@ -1,5 +1,4 @@
-import { Flex, Button, Stack, Text, useDisclosure } from '@chakra-ui/react'
-import { useHistory } from 'react-router-dom'
+import { Box, Center, Flex, useDisclosure } from '@chakra-ui/react'
 import { useAuth } from '../contexts/authContext'
 import firebase from 'firebase/app'
 import 'firebase/auth'
@@ -9,40 +8,46 @@ import { useEffect, useState } from 'react'
 import TitleModal from '../components/TitleModal'
 import Header from '../components/Header'
 
-const getUserForms = async uid => {
-  const formsRef = firebase
-    .firestore()
-    .collection('users')
-    .doc(uid)
-    .collection('forms')
-  return formsRef.get().then(snapshot =>
-    snapshot.docs.map(({ id }) => {
-      return id
-    })
-  )
-}
-
 const Home = () => {
-  const history = useHistory()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { user } = useAuth()
-  const [formIds, setFormIds] = useState()
+  const [formIds, setFormIds] = useState([])
 
   useEffect(() => {
-    getUserForms(user.uid).then(ids => setFormIds(ids))
-  }, [])
+    const formsRef = firebase
+      .firestore()
+      .collection('users')
+      .doc(user.uid)
+      .collection('forms')
+
+    const unsubscribe = formsRef.onSnapshot(snapshot => {
+      const updatedForms = snapshot.docs.map(snapshot => snapshot.id)
+      setFormIds(updatedForms)
+    })
+
+    return () => unsubscribe()
+  }, [user.uid])
 
   return user.email ? (
     <Header>
-      <Flex justifyContent="center" alignItems="center" h="100%" w="100%">
-        <Stack w="100">
-          <FormList formIDs={formIds} />
-          <Text> {user ? user.email : 'Not Found'}</Text>
-          <Button onClick={onOpen}>Create a Form</Button>
-          <Button>Logout</Button>
-        </Stack>
-        <TitleModal isOpen={isOpen} onClose={onClose} />
-      </Flex>
+      <Box h="100%" w="100%">
+        <Box
+          h="40%"
+          background="#E6FFFA"
+          borderBottom="2px"
+          borderColor="teal"
+        />
+        <Center>
+          <Flex w="80%" h="100%" alignItems="center" justifyContent="center">
+            <FormList
+              marginTop="-100px"
+              formIDs={formIds}
+              modalTrigger={onOpen}
+            />
+          </Flex>
+        </Center>
+      </Box>
+      <TitleModal isOpen={isOpen} onClose={onClose} />
     </Header>
   ) : (
     <Loading />

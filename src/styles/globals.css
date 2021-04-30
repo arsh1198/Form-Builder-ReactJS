@@ -20,14 +20,14 @@ a {
   background-color: #fff;
 }
 
-.responseCard:hover {
+.card:hover {
   transform: scale(1.1);
 }
-.responseCard:focus {
+.card:focus {
   background: #e2e8f0;
   transform: scale(1.1);
 }
 
-.responseCard {
+.card {
   transition: ease all 0.2ms;
 }

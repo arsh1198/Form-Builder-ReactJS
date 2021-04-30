@@ -27,10 +27,11 @@ export default function LoginForm() {
   const toast = useToast()
   const history = useHistory()
   const location = useLocation()
+  const [displayName, setDisplayName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const { user, setUser } = useAuth()
+  const { user, setUser, localUser, setLocalUser } = useAuth()
   const db = firebase.firestore()
   const [signUpMode, setSignUp] = useState(false)
 
@@ -81,10 +82,12 @@ export default function LoginForm() {
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then(async function (res) {
-        console.log(res)
+        firebase
+          .auth()
+          .currentUser.updateProfile({ displayName })
+          .then(setLocalUser({ ...res.user, displayName }))
+        newUser(res.user) //adding info to databse
         setLoading(false)
-        setUser(res.user)
-        newUser(res.user)
       })
       .catch(function (error) {
         setLoading(false)
@@ -153,7 +156,7 @@ export default function LoginForm() {
       })
   }
 
-  if (user) {
+  if (localUser.displayName) {
     return <Redirect to={from} />
   }
 
@@ -175,7 +178,20 @@ export default function LoginForm() {
           </Box>
 
           <form>
-            <Box mt={6}>
+            <Box>
+              {signUpMode ? (
+                <FormControl>
+                  <FormLabel>Display Name</FormLabel>
+                  <Input
+                    mb={4}
+                    value={displayName}
+                    onChange={e => setDisplayName(e.target.value)}
+                    type="email"
+                    placeholder="Email"
+                    size="sm"
+                  ></Input>
+                </FormControl>
+              ) : null}
               <FormControl>
                 <FormLabel>Email</FormLabel>
                 <Input
@@ -183,6 +199,7 @@ export default function LoginForm() {
                   onChange={e => setEmail(e.target.value)}
                   type="email"
                   placeholder="Email"
+                  size="sm"
                 ></Input>
               </FormControl>
               <FormControl mt={4}>
@@ -192,6 +209,7 @@ export default function LoginForm() {
                   onChange={e => setPassword(e.target.value)}
                   type="password"
                   placeholder="Password"
+                  size="sm"
                 ></Input>
               </FormControl>
             </Box>

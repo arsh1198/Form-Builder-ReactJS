@@ -8,9 +8,10 @@ const AuthContext = createContext({})
 export const AuthProvider = ({ children }) => {
   firebaseClient()
   const [user, setUser] = useState({})
+  const [localUser, setLocalUser] = useState({})
 
   useEffect(() => {
-    return firebase.auth().onIdTokenChanged(async user => {
+    return firebase.auth().onAuthStateChanged(async user => {
       if (!user) {
         setUser(null)
         return
@@ -21,7 +22,7 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser, localUser, setLocalUser }}>
       {children}
     </AuthContext.Provider>
   )
