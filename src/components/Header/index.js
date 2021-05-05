@@ -4,7 +4,7 @@ import UserDropDown from './UserDropDown'
 import { useAuth } from '../../contexts/authContext'
 
 const Header = props => {
-  const { localUser } = useAuth()
+  const { user } = useAuth()
   return (
     <Box
       {...props}
@@ -25,7 +25,7 @@ const Header = props => {
           justifyContent="space-between"
         >
           <Logo size={35} />
-          <UserDropDown userName={localUser.displayName} />
+          <UserDropDown userName={user.displayName} />
         </Flex>
       </nav>
       {props.children}

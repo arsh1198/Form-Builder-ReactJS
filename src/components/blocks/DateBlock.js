@@ -1,10 +1,11 @@
 import { FormControl, FormLabel } from '@chakra-ui/react'
 
-const DateBlock = ({ label, required }) => {
+const DateBlock = ({ id, label, required }) => {
   return (
     <FormControl isRequired={required}>
       <FormLabel>{label}</FormLabel>
       <input
+        id={id}
         name={label}
         style={{
           width: '100%',

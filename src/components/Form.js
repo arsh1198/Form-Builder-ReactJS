@@ -1,10 +1,10 @@
 import { Box, Center, List, Button } from '@chakra-ui/react'
-import { useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Block from './Block'
 import Loading from './Loading'
 import firebase from 'firebase/app'
 import { useAuth } from '../contexts/authContext'
-import { useHistory } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 
 function getBlocks(blocksArr) {
   return blocksArr.map((data, index) => {
@@ -12,17 +12,51 @@ function getBlocks(blocksArr) {
   })
 }
 
-export default function Form({ blocks, id }) {
+export default function Form({ showResponses }) {
   const formRef = useRef(null)
   const { user } = useAuth()
   const history = useHistory()
+
+  const { userId, formId } = useParams()
+  const [blocks, setBlocks] = useState([])
+
+  const fetchForm = useCallback(
+    formId => {
+      const formSnapshot = firebase
+        .firestore()
+        .collection('users')
+        .doc(userId)
+        .collection('forms')
+        .doc(formId)
+      formSnapshot
+        .get()
+        .then(doc => {
+          if (doc.exists) {
+            setBlocks(doc.data().form)
+            console.log('chla reyy!!')
+          } else {
+            console.log('No such document!')
+          }
+        })
+        .catch(error => {
+          console.log('Error getting document:', error)
+        })
+    },
+    [userId]
+  )
+
+  useEffect(() => {
+    fetchForm(formId)
+  }, [fetchForm, formId])
 
   const handleSubmit = async e => {
     e.preventDefault()
 
     const response = Array.from(formRef.current).map(el => {
+      console.log(el)
       if (el.type === 'checkbox' || el.type === 'radio') {
         return {
+          id: el.id,
           type: el.type,
           name: el.name,
           value: el.value,
@@ -30,6 +64,7 @@ export default function Form({ blocks, id }) {
         }
       } else
         return {
+          id: el.id,
           type: el.type,
           name: el.name,
           value: el.value
@@ -43,7 +78,7 @@ export default function Form({ blocks, id }) {
       .collection('users')
       .doc(user.uid)
       .collection('forms')
-      .doc(id)
+      .doc(formId)
       .collection('responses')
 
     responsesRef

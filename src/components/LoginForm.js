@@ -31,7 +31,7 @@ export default function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const { user, setUser, localUser, setLocalUser } = useAuth()
+  const { user, setUser, setLocalUser } = useAuth()
   const db = firebase.firestore()
   const [signUpMode, setSignUp] = useState(false)
 
@@ -75,7 +75,7 @@ export default function LoginForm() {
 
   const { from } = location.state || { from: { pathname: '/' } }
 
-  const signUp = async () => {
+  const signUp = async e => {
     console.log('signing Up!')
     setLoading(true)
     await firebase
@@ -96,7 +96,7 @@ export default function LoginForm() {
           title: 'An Error Occured!',
           description: message,
           status: 'error',
-          duration: 9000,
+          duration: 4000,
           isClosable: true
         })
       })
@@ -120,7 +120,7 @@ export default function LoginForm() {
           title: 'An Error Occured!',
           description: message,
           status: 'error',
-          duration: 9000,
+          duration: 4000,
           isClosable: true
         })
       })
@@ -156,7 +156,12 @@ export default function LoginForm() {
       })
   }
 
-  if (localUser.displayName) {
+  const handleSubmit = e => {
+    e.preventDefault()
+    signUpMode ? signUp() : signIn()
+  }
+
+  if (user) {
     return <Redirect to={from} />
   }
 
@@ -177,7 +182,7 @@ export default function LoginForm() {
             <Divider />
           </Box>
 
-          <form>
+          <form onSubmit={handleSubmit}>
             <Box>
               {signUpMode ? (
                 <FormControl>
@@ -186,7 +191,7 @@ export default function LoginForm() {
                     mb={4}
                     value={displayName}
                     onChange={e => setDisplayName(e.target.value)}
-                    type="email"
+                    type="text"
                     placeholder="Email"
                     size="sm"
                   ></Input>
@@ -222,7 +227,6 @@ export default function LoginForm() {
               variant="outline"
               borderWidth="2px"
               isLoading={loading}
-              onClick={signUpMode ? signUp : signIn}
             >
               <AnimatedText text={signUpMode ? 'Sign Up' : 'Sign In'} />
             </Button>

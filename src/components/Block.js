@@ -17,6 +17,7 @@ function getBlock(data) {
     case 'Input':
       return (
         <InputBlock
+          id={data.id}
           inputType={data.inputType}
           label={data.label}
           placeholder={data.placeholder}
@@ -26,6 +27,7 @@ function getBlock(data) {
     case 'Email':
       return (
         <InputBlock
+          id={data.id}
           inputType="email"
           label={data.label}
           placeholder={data.placeholder}
@@ -35,6 +37,7 @@ function getBlock(data) {
     case 'RadioGroup':
       return (
         <RadioBlock
+          id={data.id}
           label={data.label}
           values={data.values}
           selected={data.selected}
@@ -44,6 +47,7 @@ function getBlock(data) {
     case 'CheckboxGroup':
       return (
         <CheckboxBlock
+          id={data.id}
           label={data.label}
           values={data.values}
           required={data.required}
@@ -52,13 +56,16 @@ function getBlock(data) {
     case 'SelectList':
       return (
         <SelectListBlock
+          id={data.id}
           label={data.label}
           values={data.values}
           required={data.required}
         />
       )
     case 'Date':
-      return <DateBlock label={data.label} required={data.required} />
+      return (
+        <DateBlock id={data.id} label={data.label} required={data.required} />
+      )
     default:
       return <Text>Something Whent Wrong!</Text>
   }

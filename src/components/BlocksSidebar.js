@@ -29,6 +29,7 @@ import { useContext, useState } from 'react'
 import { BuilderContext } from '../contexts/builderContext'
 import 'firebase/firestore'
 import { useParams } from 'react-router'
+import id from 'uuid/dist/v4'
 
 function RadioCard(props) {
   const { getInputProps, getCheckboxProps } = useRadio(props)
@@ -120,6 +121,7 @@ const InputBuilder = ({ onAddField }) => {
       return setInvalid(true)
     }
     onAddField({
+      id: id(),
       type: 'Input',
       label: inputVal,
       inputType,
@@ -195,6 +197,7 @@ const RadioGroupBuilder = ({ onAddGroup }) => {
     if (label.trim() === '') return setLabelInvalid(true)
     if (values.length < 1) return setInvalid(true)
     onAddGroup({
+      id: id(),
       type: 'RadioGroup',
       label,
       values,
@@ -318,6 +321,7 @@ const CheckBoxBuilder = ({ onAddGroup }) => {
     if (label.trim() === '') return setLabelInvalid(true)
     if (values.length < 1) return setInvalid(true)
     onAddGroup({
+      id: id(),
       type: 'CheckboxGroup',
       label,
       values,
@@ -428,6 +432,7 @@ const SelectListBuilder = ({ onAddGroup }) => {
     if (label.trim() === '') return setLabelInvalid(true)
     if (values.length < 1) return setInvalid(true)
     onAddGroup({
+      id: id(),
       type: 'SelectList',
       label,
       values,
@@ -525,6 +530,7 @@ const DateBuilder = ({ onAddField }) => {
       return setInvalid(true)
     }
     onAddField({
+      id: id(),
       type: 'Date',
       label: label,
       required
