@@ -17,7 +17,9 @@ const FormList = props => {
       </Card>
       {props.formIDs
         ? props.formIDs?.map(id => (
-            <Card onClick={() => handleClick(id)}>{id}</Card>
+            <Card key={id} onClick={() => handleClick(id)}>
+              {id}
+            </Card>
           ))
         : null}
     </Flex>

@@ -147,9 +147,13 @@ const InputBuilder = ({ onAddField }) => {
       />
 
       <HStack {...group}>
-        {options.map(value => {
+        {options.map((value, index) => {
           const radio = getRadioProps({ value })
-          return <RadioCard {...radio}>{value}</RadioCard>
+          return (
+            <RadioCard key={index} {...radio}>
+              {value}
+            </RadioCard>
+          )
         })}
       </HStack>
       <HStack>

@@ -16,19 +16,17 @@ export default function Builder() {
 
   function getBlocks(blocksArr) {
     if (blocksArr) {
-      return blocksArr.map((data, index) => {
-        return (
-          <ListItem>
-            <Block
-              data={data}
-              deleteable={data.type !== 'Title'}
-              onDelete={() => {
-                deleteBlock(index)
-              }}
-            />
-          </ListItem>
-        )
-      })
+      return blocksArr.map((data, index) => (
+        <ListItem key={data.id}>
+          <Block
+            data={data}
+            deleteable={data.type !== 'Title'}
+            onDelete={() => {
+              deleteBlock(index)
+            }}
+          />
+        </ListItem>
+      ))
     }
   }
 

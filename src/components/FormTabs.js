@@ -37,7 +37,7 @@ const FormTabs = ({ deletedRef }) => {
 
   return (
     <Tabs colorScheme="teal" h="100vh">
-      <Flex h="100%" direction="column">
+      <Flex h="100%" w="100%" direction="column">
         <TabList mt={2} position="relative">
           <Tab>Form</Tab>
           <Tab isDisabled={!formId}>Responses</Tab>
@@ -73,7 +73,7 @@ const FormTabs = ({ deletedRef }) => {
           <TabPanel p={0} h="100%">
             <Builder />
           </TabPanel>
-          <TabPanel>
+          <TabPanel p={0} h="100%" w="100%">
             <Responses />
           </TabPanel>
         </TabPanels>

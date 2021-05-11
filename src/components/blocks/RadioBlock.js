@@ -14,11 +14,11 @@ function getRadio({ id, values, label }) {
   ))
 }
 
-const RadioBlock = ({ id, label, values, selected, required }) => {
+const RadioBlock = ({ id, label, values, required }) => {
   return (
     <FormControl isRequired={required}>
       <FormLabel>{label}</FormLabel>
-      <RadioGroup mt={4} defaultValue={`${selected + 1}`}>
+      <RadioGroup mt={4}>
         <Stack>{getRadio({ id, values, label })}</Stack>
       </RadioGroup>
     </FormControl>

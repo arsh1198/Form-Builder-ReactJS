@@ -8,7 +8,7 @@ import { CloseIcon } from '@chakra-ui/icons'
 import DateBlock from './blocks/DateBlock'
 import TitleBlock from './blocks/TitleBlock'
 
-function getBlock(data) {
+function getBlock(data, disabled) {
   switch (data.type) {
     case 'Title':
       return <TitleBlock value={data.value} />
@@ -40,7 +40,6 @@ function getBlock(data) {
           id={data.id}
           label={data.label}
           values={data.values}
-          selected={data.selected}
           required={data.required}
         />
       )
@@ -71,7 +70,7 @@ function getBlock(data) {
   }
 }
 
-const Block = ({ data, deleteable, onDelete }) => {
+const Block = ({ data, deleteable, onDelete, disabled }) => {
   return (
     <Box
       borderWidth={1}

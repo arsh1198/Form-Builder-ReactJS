@@ -5,6 +5,7 @@ import Loading from './Loading'
 import firebase from 'firebase/app'
 import { useAuth } from '../contexts/authContext'
 import { useHistory, useParams } from 'react-router'
+import useResponse from '../hooks/useResponse'
 
 function getBlocks(blocksArr) {
   return blocksArr.map((data, index) => {
@@ -13,65 +14,101 @@ function getBlocks(blocksArr) {
 }
 
 export default function Form({ showResponses }) {
-  const formRef = useRef(null)
+  const formRef = useRef()
   const { user } = useAuth()
   const history = useHistory()
 
   const { userId, formId } = useParams()
+  const { response } = useResponse()
   const [blocks, setBlocks] = useState([])
 
-  const fetchForm = useCallback(
-    formId => {
-      const formSnapshot = firebase
-        .firestore()
-        .collection('users')
-        .doc(userId)
-        .collection('forms')
-        .doc(formId)
-      formSnapshot
-        .get()
-        .then(doc => {
-          if (doc.exists) {
-            setBlocks(doc.data().form)
-            console.log('chla reyy!!')
-          } else {
-            console.log('No such document!')
-          }
-        })
-        .catch(error => {
-          console.log('Error getting document:', error)
-        })
-    },
-    [userId]
-  )
+  const fetchForm = useCallback(() => {
+    const formSnapshot = firebase
+      .firestore()
+      .collection('users')
+      .doc(showResponses ? user.uid : userId)
+      .collection('forms')
+      .doc(formId)
+    formSnapshot
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          setBlocks(doc.data().form)
+          console.log('chla reyy!!')
+        } else {
+          console.log('No such document!')
+        }
+      })
+      .catch(error => {
+        console.log('Error getting document:', error)
+      })
+  }, [showResponses, user.uid, userId, formId])
+
+  const fetchResponse = useCallback(() => {
+    const responseSnapshot = firebase.firestore().collection('users')
+    console
+      .log(responseSnapshot)
+      .doc(showResponses ? user.uid : userId)
+      .collection('forms')
+      .doc(formId)
+      .collection('responses')
+      .doc(response)
+    responseSnapshot
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          console.log(doc.data().form)
+          console.log('chla reyy!!')
+        } else {
+          console.log('No such document!')
+        }
+      })
+      .catch(error => {
+        console.log('Error getting document:', error)
+      })
+  }, [showResponses, user.uid, userId, formId, response])
 
   useEffect(() => {
-    fetchForm(formId)
-  }, [fetchForm, formId])
+    fetchForm()
+  }, [fetchForm, formId, fetchResponse, showResponses])
+
+  // useEffect(() => {
+  //   fetchResponse()
+  // }, [fetchResponse])
 
   const handleSubmit = async e => {
     e.preventDefault()
 
-    const response = Array.from(formRef.current).map(el => {
-      console.log(el)
-      if (el.type === 'checkbox' || el.type === 'radio') {
-        return {
-          id: el.id,
-          type: el.type,
-          name: el.name,
-          value: el.value,
-          checked: el.checked
-        }
-      } else
-        return {
-          id: el.id,
-          type: el.type,
-          name: el.name,
-          value: el.value
-        }
+    const temp = Array.from(formRef.current)
+      .map(el => {
+        if (el.type === 'checkbox' || el.type === 'radio') {
+          if (el.checked === true)
+            return {
+              id: el.id,
+              value: el.value
+            }
+          else return undefined
+        } else
+          return {
+            id: el.id,
+            value: el.value
+          }
+      })
+      .filter(val => val !== undefined && val.id !== '')
+
+    const responseObjs = blocks.map(el => {
+      if (el.id !== undefined) {
+        const found = temp.find(el2 => el2.id === el.id)
+        if (found) return { ...el, ...found }
+      }
+      return el
     })
 
-    response.splice(response.length - 1, response.length)
+    console.log('TEMP => ', temp)
+
+    console.log('BLOCKS =>', blocks)
+
+    console.log('RESPONSE =>', responseObjs)
 
     const responsesRef = await firebase
       .firestore()
@@ -84,7 +121,7 @@ export default function Form({ showResponses }) {
     responsesRef
       .add({
         date: new Date(),
-        response: response
+        response: responseObjs
       })
       .then(e => {
         console.log('Submitted =>', e)
@@ -92,36 +129,35 @@ export default function Form({ showResponses }) {
       .catch(error => error.message)
   }
 
-  if (blocks)
-    return blocks.length > 0 ? (
-      <Center>
-        <Box
-          my={4}
-          borderWidth={1}
-          borderColor="#008080"
-          bg="#E6FFFA"
-          p={4}
-          minW="30%"
-          maxW="70%"
-          boxShadow="sm"
-          borderRadius="lg"
+  return (
+    <Center>
+      <Box
+        my={4}
+        borderWidth={1}
+        borderColor="#008080"
+        bg="#E6FFFA"
+        p={4}
+        minW="30vw"
+        boxShadow="sm"
+        borderRadius="lg"
+      >
+        <form
+          ref={formRef}
+          onSubmit={e => {
+            handleSubmit(e).then(() => {
+              history.replace('/')
+            })
+          }}
         >
-          <form
-            ref={formRef}
-            onSubmit={e => {
-              handleSubmit(e).then(() => {
-                history.replace('/')
-              })
-            }}
-          >
-            <List spacing={2}>{getBlocks(blocks)}</List>
+          {blocks.length === 0 && <Loading />}
+          {blocks.length && <List spacing={2}>{getBlocks(blocks)}</List>}
+          {showResponses ? null : (
             <Button float="right" mt={4} colorScheme="teal" type="submit">
               Submit
             </Button>
-          </form>
-        </Box>
-      </Center>
-    ) : (
-      <Loading />
-    )
+          )}
+        </form>
+      </Box>
+    </Center>
+  )
 }
