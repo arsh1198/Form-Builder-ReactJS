@@ -5,21 +5,18 @@ import Loading from './Loading'
 import firebase from 'firebase/app'
 import { useAuth } from '../contexts/authContext'
 import { useHistory, useParams } from 'react-router'
-import useResponse from '../hooks/useResponse'
-
-function getBlocks(blocksArr) {
+function getBlocks(blocksArr, showResponses) {
   return blocksArr.map((data, index) => {
-    return <Block key={index} data={data} />
+    return <Block disabled={showResponses} key={index} data={data} />
   })
 }
 
-export default function Form({ showResponses }) {
+export default function Form({ showResponses, response }) {
   const formRef = useRef()
   const { user } = useAuth()
   const history = useHistory()
 
   const { userId, formId } = useParams()
-  const { response } = useResponse()
   const [blocks, setBlocks] = useState([])
 
   const fetchForm = useCallback(() => {
@@ -45,10 +42,11 @@ export default function Form({ showResponses }) {
   }, [showResponses, user.uid, userId, formId])
 
   const fetchResponse = useCallback(() => {
-    const responseSnapshot = firebase.firestore().collection('users')
-    console
-      .log(responseSnapshot)
-      .doc(showResponses ? user.uid : userId)
+    console.log('ResponseID => ', response)
+    const responseSnapshot = firebase
+      .firestore()
+      .collection('users')
+      .doc(user.uid)
       .collection('forms')
       .doc(formId)
       .collection('responses')
@@ -57,8 +55,8 @@ export default function Form({ showResponses }) {
       .get()
       .then(doc => {
         if (doc.exists) {
-          console.log(doc.data().form)
-          console.log('chla reyy!!')
+          setBlocks(doc.data().response)
+          console.log('response chla reyy!!')
         } else {
           console.log('No such document!')
         }
@@ -66,10 +64,10 @@ export default function Form({ showResponses }) {
       .catch(error => {
         console.log('Error getting document:', error)
       })
-  }, [showResponses, user.uid, userId, formId, response])
+  }, [user.uid, formId, response])
 
   useEffect(() => {
-    fetchForm()
+    showResponses ? fetchResponse() : fetchForm()
   }, [fetchForm, formId, fetchResponse, showResponses])
 
   // useEffect(() => {
@@ -79,20 +77,48 @@ export default function Form({ showResponses }) {
   const handleSubmit = async e => {
     e.preventDefault()
 
+    const checkboxVals = []
     const temp = Array.from(formRef.current)
       .map(el => {
-        if (el.type === 'checkbox' || el.type === 'radio') {
-          if (el.checked === true)
+        switch (el.type) {
+          case 'radio':
+            if (el.checked === true)
+              return {
+                id: el.id,
+                checked: el.value
+              }
+            else return undefined
+
+          case 'checkbox':
+            if (el.checked === true) {
+              checkboxVals.push(el.value)
+              return undefined
+            }
+
+            return {
+              id: el.id,
+              checked: checkboxVals
+            }
+          default:
             return {
               id: el.id,
               value: el.value
             }
-          else return undefined
-        } else
-          return {
-            id: el.id,
-            value: el.value
-          }
+        }
+
+        // if (el.type === 'checkbox' || el.type === 'radio') {
+        //   if (el.checked === true)
+        //     return {
+        //       id: el.id,
+        //       value: el.value
+        //     }
+        //   else return undefined
+        // } else
+        //   return {
+        //     type: el.type,
+        //     id: el.id,
+        //     value: el.value
+        //   }
       })
       .filter(val => val !== undefined && val.id !== '')
 
@@ -150,7 +176,9 @@ export default function Form({ showResponses }) {
           }}
         >
           {blocks.length === 0 && <Loading />}
-          {blocks.length && <List spacing={2}>{getBlocks(blocks)}</List>}
+          {blocks.length && (
+            <List spacing={2}>{getBlocks(blocks, showResponses)}</List>
+          )}
           {showResponses ? null : (
             <Button float="right" mt={4} colorScheme="teal" type="submit">
               Submit

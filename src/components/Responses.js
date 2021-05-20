@@ -5,14 +5,13 @@ import { useAuth } from '../contexts/authContext'
 import { useParams } from 'react-router'
 import { useEffect, useState } from 'react'
 import Form from '../components/Form'
-import useResponse from '../hooks/useResponse'
 
 const Responses = () => {
   const { user } = useAuth()
   const { formId } = useParams()
   const [responseIds, setResponseIds] = useState([])
   const [selected, setSelected] = useState(false)
-  const { response, setResponse } = useResponse()
+  const [response, setResponse] = useState('')
 
   useEffect(() => {
     const responsesRef = firebase
@@ -36,19 +35,19 @@ const Responses = () => {
   return (
     <Flex w="100%" alignItems="center" justifyContent="center" flexWrap="wrap">
       {!selected ? (
-        responseIds.map(id => (
+        responseIds.map(resId => (
           <Card
-            key={id}
+            key={resId}
             onClick={() => {
-              setResponse(id)
+              setResponse(resId)
               setSelected(prev => !prev)
             }}
           >
-            {id}
+            {resId}
           </Card>
         ))
       ) : (
-        <Form showResponses />
+        <Form showResponses response={response} />
       )}
     </Flex>
   )

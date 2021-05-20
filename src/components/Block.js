@@ -22,6 +22,8 @@ function getBlock(data, disabled) {
           label={data.label}
           placeholder={data.placeholder}
           required={data.required}
+          value={data.value}
+          disabled={disabled}
         />
       )
     case 'Email':
@@ -32,6 +34,8 @@ function getBlock(data, disabled) {
           label={data.label}
           placeholder={data.placeholder}
           required={data.required}
+          value={data.value}
+          disabled={disabled}
         />
       )
     case 'RadioGroup':
@@ -41,6 +45,8 @@ function getBlock(data, disabled) {
           label={data.label}
           values={data.values}
           required={data.required}
+          checked={data.checked}
+          disabled={disabled}
         />
       )
     case 'CheckboxGroup':
@@ -50,6 +56,8 @@ function getBlock(data, disabled) {
           label={data.label}
           values={data.values}
           required={data.required}
+          checked={data.checked}
+          disabled={disabled}
         />
       )
     case 'SelectList':
@@ -59,11 +67,19 @@ function getBlock(data, disabled) {
           label={data.label}
           values={data.values}
           required={data.required}
+          value={data.value}
+          disabled={disabled}
         />
       )
     case 'Date':
       return (
-        <DateBlock id={data.id} label={data.label} required={data.required} />
+        <DateBlock
+          id={data.id}
+          label={data.label}
+          required={data.required}
+          value={data.value}
+          disabled={disabled}
+        />
       )
     default:
       return <Text>Something Whent Wrong!</Text>
@@ -105,7 +121,7 @@ const Block = ({ data, deleteable, onDelete, disabled }) => {
                 style={{ position: 'absolute', right: 20 }}
               />
             </Tooltip>
-            {getBlock(data)}
+            {getBlock(data, disabled)}
           </>
         )
       ) : (
